@@ -2,12 +2,10 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
   Heading,
   Hide,
   HStack,
   Image,
-  Input,
   Text,
   useMediaQuery,
   VStack,
@@ -16,6 +14,9 @@ import React from "react";
 import SignupImage from "../assets/signup-image.png";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import FieldInput from "../components/FieldInput";
 
 function SignupPage() {
   const [isLessThanSM] = useMediaQuery("(max-width: 62em)");
@@ -46,52 +47,82 @@ function SignupPage() {
           online.
         </Text>
 
-        <VStack w={formWidth} spacing={5}>
-          <FormControl>
-            <Input placeholder="Full Name" focusBorderColor="#25ABB2" />
-          </FormControl>
+        <Formik
+          initialValues={{ username: "", email: "", phone: "", password: "" }}
+          validationSchema={Yup.object({
+            username: Yup.string().required("Name required"),
+            email: Yup.string()
+              .email("Invalid email format")
+              .required("Email required"),
+            phone: Yup.string()
+              .required("Phone required")
+              .length(8, "Must have a minimum 8 digits"),
+            password: Yup.string()
+              .required("Password required")
+              .min(6, "Password is too short"),
+          })}
+          onSubmit={(values, actions) => {
+            console.log("first");
+            alert(JSON.stringify(values, null, 2));
+            actions.resetForm();
+          }}
+        >
+          {(formik) => (
+            <VStack w={formWidth} spacing={5}>
+              <FieldInput
+                placeholder="Full Name"
+                focusBorderColor="#25ABB2"
+                name="username"
+              />
 
-          <FormControl>
-            <Input
-              placeholder="Email Address"
-              type="email"
-              focusBorderColor="#25ABB2"
-            />
-          </FormControl>
+              <FieldInput
+                placeholder="Email Address"
+                type="email"
+                focusBorderColor="#25ABB2"
+                name="email"
+              />
 
-          <FormControl>
-            <Input
-              placeholder="Phone Number"
-              type="number"
-              focusBorderColor="#25ABB2"
-            />
-          </FormControl>
-          <FormControl>
-            <Input
-              placeholder="Password"
-              type="password"
-              focusBorderColor="#25ABB2"
-            />
-          </FormControl>
+              <FieldInput
+                placeholder="Phone Number"
+                type="number"
+                focusBorderColor="#25ABB2"
+                name="phone"
+              />
 
-          <Button color="white" colorScheme="green" width="100%" type="submit">
-            Sign Up
-          </Button>
+              <FieldInput
+                placeholder="Password"
+                type="password"
+                focusBorderColor="#25ABB2"
+                name="password"
+              />
 
-          <Box display="flex" justifyContent="center">
-            <Text fontSize={14}>Already have an account?</Text>
-          </Box>
-          <Button
-            width="100%"
-            color="white"
-            colorScheme="teal"
-            type="button"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </Button>
-        </VStack>
+              <Button
+                color="white"
+                colorScheme="green"
+                width="100%"
+                type="button"
+                onClick={formik.handleSubmit}
+              >
+                Sign Up
+              </Button>
+
+              <Box display="flex" justifyContent="center">
+                <Text fontSize={14}>Already have an account?</Text>
+              </Box>
+              <Button
+                width="100%"
+                color="white"
+                colorScheme="teal"
+                type="button"
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </Button>
+            </VStack>
+          )}
+        </Formik>
       </VStack>
+
       <Hide below="base">
         <Flex
           w="100%"
