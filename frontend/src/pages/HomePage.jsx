@@ -1,13 +1,19 @@
-import { Box } from '@chakra-ui/react'
-import React from 'react'
-import TopNavbar from '../components/TopNavbar'
+import React from "react";
+import PageWrapper from "../components/PageWrapper";
 
 function HomePage() {
   return (
-    <Box pr={4} pl={4}>
-      <TopNavbar />
-    </Box>
-  )
+    <PageWrapper>
+      hello
+    </PageWrapper>
+    // <Flex justifyContent="space-between" flexDir="column" height="100vh">
+    //   <Box pr={4} pl={4}>
+    //     <TopNavbar />
+    //     <Box height="100vh" bgColor="red" />
+    //   </Box>
+    //   <Footer />
+    // </Flex>
+  );
 }
 
-export default HomePage
+export default HomePage;

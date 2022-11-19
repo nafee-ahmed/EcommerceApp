@@ -19,7 +19,7 @@ import * as Yup from "yup";
 import FieldInput from "../components/FieldInput";
 
 function SignupPage() {
-  const [isLessThanSM] = useMediaQuery("(max-width: 62em)");
+  const [isLessThanLG] = useMediaQuery("(max-width: 62em)");
   const formWidth = { base: "100%", sm: "100%", lg: "70%" };
 
   const navigate = useNavigate();
@@ -62,7 +62,6 @@ function SignupPage() {
               .min(6, "Password is too short"),
           })}
           onSubmit={(values, actions) => {
-            console.log("first");
             alert(JSON.stringify(values, null, 2));
             actions.resetForm();
           }}
@@ -144,7 +143,7 @@ function SignupPage() {
             pb="10"
             pl="5"
             pos="absolute"
-            display={isLessThanSM ? "none" : "flex"}
+            display={isLessThanLG ? "none" : "flex"}
           >
             <Heading
               as="h1"
