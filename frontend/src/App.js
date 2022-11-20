@@ -6,6 +6,7 @@ import SignupPage from "./pages/SignupPage";
 import CategoryPage from "./pages/ChooseCategoryPage";
 import AddCategory from "./pages/AddCategoryPage";
 import BuyCategoryPage from "./pages/BuyCategoryPage";
+import BuyingPage from "./pages/BuyingPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/add/category" element={<CategoryPage />} />
           <Route path="/category/:cat" element={<AddCategory />} />
           <Route path="/buy/:cat" element={<BuyCategoryPage />} />
+          <Route path="/cart" element={<BuyingPage />} />
           <Route path="/" element={<HomePage />} />
         </Routes>
       </ChakraProvider>

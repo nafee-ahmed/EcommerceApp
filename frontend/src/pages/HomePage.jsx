@@ -4,7 +4,7 @@ import PageWrapper from "../components/PageWrapper";
 function HomePage() {
   return (
     <PageWrapper>
-      hello
+      he
     </PageWrapper>
     // <Flex justifyContent="space-between" flexDir="column" height="100vh">
     //   <Box pr={4} pl={4}>
