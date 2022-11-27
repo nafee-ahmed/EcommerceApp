@@ -34,6 +34,7 @@ import TagList from "../components/TagList";
 import productSample from "../assets/product-sample.png";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import { useState } from "react";
+import ProductOrService from "../components/ProductOrService";
 
 function BuyCategoryPage() {
   const toast = useToast();
@@ -67,20 +68,7 @@ function BuyCategoryPage() {
         <GridItem colSpan={isLessThanSM ? 10 : 8}>
           <VStack alignSelf="start" width="100%">
             {isLessThanSM ? (
-              <Tabs isFitted width="100%">
-                <TabList mb="1em">
-                  <Tab>Products</Tab>
-                  <Tab>Services</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    <TagList />
-                  </TabPanel>
-                  <TabPanel>
-                    <TagList />
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
+              <ProductOrService />
             ) : (
               <Box width="100%">
                 <TagList />

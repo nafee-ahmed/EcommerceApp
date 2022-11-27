@@ -4,12 +4,15 @@ import {
   Image,
   StackDivider,
   Text,
+  useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
 import logo from "../assets/logo.png";
 
 function Footer() {
+  const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
+
   return (
     <HStack
       mt={3}
@@ -30,7 +33,7 @@ function Footer() {
           merchandises and services
         </Text>
       </VStack>
-      <HStack alignItems="start">
+      {!isLessThanSM && (<HStack alignItems="start">
         <VStack>
           <Text fontSize="sm">MENS</Text>
           <Text fontSize="xs">Shirts</Text>
@@ -54,7 +57,7 @@ function Footer() {
           <Text fontSize="xs">Toys</Text>
           <Text fontSize="xs">T-shirts</Text>
         </VStack>
-      </HStack>
+      </HStack>)}
     </HStack>
   );
 }
