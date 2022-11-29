@@ -1,25 +1,33 @@
 import {
   Box,
-  Flex,
-  HStack,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex, HStack,
   IconButton,
-  Image,
+  Image, useDisclosure,
   useMediaQuery,
+  VStack
 } from "@chakra-ui/react";
-import React from "react";
-import logo from "../assets/logo.png";
-import { FaSearch } from "react-icons/fa";
-import { IoMdAdd } from "react-icons/io";
+import React, { useState } from "react";
+import { AiOutlinePlus } from "react-icons/ai";
+import { BiLogOutCircle } from "react-icons/bi";
+import { FaBars, FaSearch } from "react-icons/fa";
+import { GoListUnordered } from "react-icons/go";
 import { HiShoppingCart } from "react-icons/hi";
-import { TiHome } from "react-icons/ti";
-import {GoListUnordered} from 'react-icons/go'
-import { useState } from "react";
+import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png";
+import CustomNavLink from "./CustomNavLink";
 import SearchBar from "./SearchBar";
 
 function TopNavbar() {
   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
   const [isShowSearch, setIsShowSearch] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const sidePadding = 4;
 
   return isShowSearch ? (
@@ -35,33 +43,19 @@ function TopNavbar() {
     </Flex>
   ) : (
     <Flex
-      justifyContent="space-between"
+      justifyContent={isLessThanSM ? "end" : "space-between"}
       flexDir="row"
       mt={4}
       pr={sidePadding}
       pl={sidePadding}
     >
       {/* if less than SM, show home icon otherwise logo */}
-      {!isShowSearch && (
-        <>
-          {isLessThanSM ? (
-            <Link to="/">
-              <IconButton
-                size={isLessThanSM ? "sm" : "md"}
-                colorScheme="teal"
-                aria-label="Home"
-                isRound={true}
-                icon={<TiHome size="80%" />}
-              />
-            </Link>
-          ) : (
-            <Link to="/">
-              <Flex flexDir="column" justifyContent="center">
-                <Image src={logo} w={"130px"} />
-              </Flex>
-            </Link>
-          )}
-        </>
+      {!isLessThanSM && (
+        <Link to="/">
+          <Flex flexDir="column" justifyContent="center">
+            <Image src={logo} w={"130px"} />
+          </Flex>
+        </Link>
       )}
 
       {!isLessThanSM && (
@@ -72,42 +66,97 @@ function TopNavbar() {
 
       <HStack spacing={2}>
         {isLessThanSM && (
-          <IconButton
-            size={"sm"}
-            colorScheme="teal"
-            aria-label="Search"
-            icon={<FaSearch />}
-            isRound={true}
-            onClick={() => setIsShowSearch(!isShowSearch)}
-          />
+          <>
+            <IconButton
+              size={"md"}
+              colorScheme="teal"
+              aria-label="Search"
+              icon={<FaSearch />}
+              isRound={true}
+              onClick={() => setIsShowSearch(!isShowSearch)}
+            />
+            <IconButton
+              size={"md"}
+              colorScheme="teal"
+              aria-label="Search"
+              icon={<FaBars />}
+              isRound={true}
+              onClick={onOpen}
+            />
+          </>
         )}
-        <Link to="/add/category">
-          <IconButton
-            size={isLessThanSM ? "sm" : "md"}
-            colorScheme="teal"
-            aria-label="Add Product"
-            isRound={true}
-            icon={<IoMdAdd size="80%" />}
-          />
-        </Link>
-        <Link to="/cart">
-          <IconButton
-            size={isLessThanSM ? "sm" : "md"}
-            colorScheme="teal"
-            aria-label="Cart"
-            isRound={true}
-            variant="ghost"
-            icon={<HiShoppingCart size="80%" />}
-          />
-        </Link>
-        <IconButton
-          size={isLessThanSM ? "sm" : "md"}
-          colorScheme="teal"
-          aria-label="Profile"
-          isRound={true}
-          icon={<GoListUnordered size="70%" />}
-        />
+        {!isLessThanSM && (
+          <>
+            <CustomNavLink
+              route="/logout"
+              ariaText="Logout"
+              icon={<BiLogOutCircle size="100%" />}
+              iconVariant="ghost"
+            />
+            <CustomNavLink
+              route="/add/category"
+              ariaText="Add Product"
+              icon={<IoMdAdd size="80%" />}
+            />
+            <CustomNavLink
+              route="/cart"
+              ariaText="Cart"
+              icon={<HiShoppingCart size="80%" />}
+              iconVariant="ghost"
+            />
+            <CustomNavLink
+              route="/"
+              ariaText="Orders"
+              icon={<GoListUnordered size="70%" />}
+            />
+          </>
+        )}
       </HStack>
+
+      <Drawer placement="top" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton color="teal" />
+          <DrawerHeader borderBottomWidth="1px">
+            <Link to="/">
+              <Image src={logo} w={"100px"} />
+            </Link>
+          </DrawerHeader>
+          <DrawerBody>
+            <VStack as="nav" alignItems="start" spacing={2}>
+              <CustomNavLink
+                label="small"
+                route="/add/category"
+                ariaText="Add Product"
+                icon={<AiOutlinePlus size="80%" />}
+                text="Add Product"
+              />
+              <CustomNavLink
+                label="small"
+                route="/cart"
+                ariaText="Cart"
+                icon={<HiShoppingCart size="80%" />}
+                text="Cart"
+              />
+              <CustomNavLink
+                label="small"
+                route="/"
+                ariaText="Orders"
+                icon={<GoListUnordered size="70%" />}
+                text="My Orders"
+              />
+              <CustomNavLink
+                label="small"
+                handleClick={() => console.log("logging out")}
+                ariaText="Logout"
+                icon={<BiLogOutCircle size="100%" />}
+                iconVariant="ghost"
+                text="Log Out"
+              />
+            </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Flex>
   );
 }

@@ -51,7 +51,7 @@ function ProductItem() {
         </Heading>
         {!isLessThanSM && (
           <Text fontSize={"sm"} color="#707070">
-            4.5/5 <Icon as={HiStar} size="sm" />
+            4.5/5 <Icon as={HiStar}  />
           </Text>
         )}
         <Text fontSize={isLessThanSM ? "xs" : "sm"} color="#707070">
