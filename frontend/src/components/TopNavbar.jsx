@@ -6,13 +6,16 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  Flex, HStack,
+  Flex,
+  HStack,
   IconButton,
-  Image, useDisclosure,
+  Image,
+  useDisclosure,
   useMediaQuery,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useContext } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BiLogOutCircle } from "react-icons/bi";
 import { FaBars, FaSearch } from "react-icons/fa";
@@ -21,6 +24,7 @@ import { HiShoppingCart } from "react-icons/hi";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { AuthContext } from "../contexts/AuthContext";
 import CustomNavLink from "./CustomNavLink";
 import SearchBar from "./SearchBar";
 
@@ -29,6 +33,8 @@ function TopNavbar() {
   const [isShowSearch, setIsShowSearch] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const sidePadding = 4;
+
+  const { user } = useContext(AuthContext);
 
   return isShowSearch ? (
     <Flex
@@ -87,12 +93,14 @@ function TopNavbar() {
         )}
         {!isLessThanSM && (
           <>
-            <CustomNavLink
-              route="/logout"
-              ariaText="Logout"
-              icon={<BiLogOutCircle size="100%" />}
-              iconVariant="ghost"
-            />
+            {user !== null && (
+              <CustomNavLink
+                route="/logout"
+                ariaText="Logout"
+                icon={<BiLogOutCircle size="100%" />}
+                iconVariant="ghost"
+              />
+            )}
             <CustomNavLink
               route="/add/category"
               ariaText="Add Product"
@@ -145,14 +153,16 @@ function TopNavbar() {
                 icon={<GoListUnordered size="70%" />}
                 text="My Orders"
               />
-              <CustomNavLink
-                label="small"
-                handleClick={() => console.log("logging out")}
-                ariaText="Logout"
-                icon={<BiLogOutCircle size="100%" />}
-                iconVariant="ghost"
-                text="Log Out"
-              />
+              {user !== null && (
+                <CustomNavLink
+                  label="small"
+                  handleClick={() => console.log("logging out")}
+                  ariaText="Logout"
+                  icon={<BiLogOutCircle size="100%" />}
+                  iconVariant="ghost"
+                  text="Log Out"
+                />
+              )}
             </VStack>
           </DrawerBody>
         </DrawerContent>

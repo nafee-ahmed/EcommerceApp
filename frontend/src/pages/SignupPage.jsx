@@ -48,15 +48,15 @@ function SignupPage() {
         </Text>
 
         <Formik
-          initialValues={{ username: "", email: "", phone: "", password: "" }}
+          initialValues={{ name: "", email: "", phone: "", password: "" }}
           validationSchema={Yup.object({
-            username: Yup.string().required("Name required"),
+            name: Yup.string().required("Name required"),
             email: Yup.string()
               .email("Invalid email format")
               .required("Email required"),
             phone: Yup.string()
               .required("Phone required")
-              .length(8, "Must have a minimum 8 digits"),
+              .length(8, "Must have 8 digits"),
             password: Yup.string()
               .required("Password required")
               .min(6, "Password is too short"),
@@ -71,7 +71,7 @@ function SignupPage() {
               <FieldInput
                 placeholder="Full Name"
                 focusBorderColor="#25ABB2"
-                name="username"
+                name="name"
               />
 
               <FieldInput

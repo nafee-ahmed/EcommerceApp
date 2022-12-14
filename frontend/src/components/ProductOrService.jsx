@@ -4,7 +4,7 @@ import TagList from "./TagList";
 
 function ProductOrService() {
   return (
-    <Tabs isFitted width="100%">
+    <Tabs isFitted width="100%" colorScheme="teal">
       <TabList mb="1em">
         <Tab>Products</Tab>
         <Tab>Services</Tab>

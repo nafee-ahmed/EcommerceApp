@@ -13,16 +13,19 @@ import {
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
+import axios from "axios";
+import { useFormik } from "formik";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 import LoginImage from "../assets/login-image.png";
 import logo from "../assets/logo.png";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { AuthContext } from "../contexts/AuthContext";
+import { backendLink } from "../utils/constants";
 
 function LoginPage() {
   const [isLessThanSM] = useMediaQuery("(max-width: 62em)");
-
+  const { loading, authDispatch } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -36,8 +39,18 @@ function LoginPage() {
         .required("Email required"),
       password: Yup.string().required("Password required"),
     }),
-    onSubmit: (values, action) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values, action) => {
+      authDispatch({ type: "AUTH_START" });
+      try {
+        const res = await axios.post(backendLink + "/auth/login", values, {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        });
+        authDispatch({ type: "AUTH_SUCCESS", payload: res.data });
+        navigate("/");
+      } catch (err) {
+        authDispatch({ type: "AUTH_FAILURE", payload: err.response?.data });
+      }
     },
   });
 
@@ -127,9 +140,13 @@ function LoginPage() {
               onBlur={formik.handleBlur}
             />
             <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+            {/* {error && (
+              <FormHelperText color={"red"}>{error?.message}</FormHelperText>
+            )} */}
           </FormControl>
 
           <Button
+            disabled={loading}
             color="white"
             colorScheme="green"
             width="100%"
@@ -143,6 +160,7 @@ function LoginPage() {
             <Text fontSize={14}>New here?</Text>
           </Box>
           <Button
+            disabled={loading}
             width="100%"
             color="white"
             colorScheme="teal"

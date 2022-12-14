@@ -1,35 +1,29 @@
 import {
   Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  Divider,
   Grid,
   GridItem,
-  Heading,
-  HStack,
   Image,
   SimpleGrid,
-  Stack,
-  Text,
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
+import { Link } from "react-router-dom";
+import ForYou from "../assets/for-you.png";
 import LandingImg from "../assets/landing-img.png";
+import CategoryCard from "../components/CategoryCard";
 import PageWrapper from "../components/PageWrapper";
 import ProductOrService from "../components/ProductOrService";
 import SideBar from "../components/SideBar";
 import TagList from "../components/TagList";
-import ForYou from "../assets/for-you.png";
-import CategoryCard from "../components/CategoryCard";
-import { Link } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
 
 function HomePage() {
   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
   const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
+
+  const { data } = useFetch("/");
+  console.log(data);
 
   return (
     <PageWrapper>
