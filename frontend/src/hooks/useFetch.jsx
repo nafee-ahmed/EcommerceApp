@@ -1,16 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { backendLink } from "../utils/constants";
+import { ax, backendLink } from "../utils/constants";
 
 const useFetch = (url) => {
   const [data, setData] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const ax = axios.create({
-    baseURL: backendLink,
-    withCredentials: true,
-  });
+  // const ax = axios.create({
+  //   baseURL: backendLink,
+  //   withCredentials: true,
+  // });
 //   const config = {
 //     headers: {
 //       Authorization: `Bearer ${localStorage.getItem("authToken")}`,
