@@ -13,7 +13,6 @@ import {
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useFormik } from "formik";
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +20,7 @@ import * as Yup from "yup";
 import LoginImage from "../assets/login-image.png";
 import logo from "../assets/logo.png";
 import { AuthContext } from "../contexts/AuthContext";
-import { backendLink } from "../utils/constants";
+import { ax } from "../utils/constants";
 
 function LoginPage() {
   const [isLessThanSM] = useMediaQuery("(max-width: 62em)");
@@ -42,10 +41,7 @@ function LoginPage() {
     onSubmit: async (values, action) => {
       authDispatch({ type: "AUTH_START" });
       try {
-        const res = await axios.post(backendLink + "/auth/login", values, {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        });
+        const res = await ax.post("/auth/login", values);
         authDispatch({ type: "AUTH_SUCCESS", payload: res.data });
         navigate("/");
       } catch (err) {
