@@ -15,13 +15,14 @@ module.exports.signup = async (req, res, next) => {
       password: hash,
     });
 
-    await newUser.save();
-    console.log(req.body);
+    const user = await newUser.save();
+    const { password, ...filteredUser } = user._doc;
+    console.log({...filteredUser});
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
     res
       .cookie("access_token", token, { httpOnly: true })
       .status(201)
-      .json({ success: true, message: "Signed up successfully" });
+      .json({...filteredUser});
   } catch (error) {
     next(error);
   }
@@ -45,7 +46,7 @@ module.exports.login = async (req, res, next) => {
         expires: new Date(Date.now() + 25892000000), // set expiry of 1month
       })
       .status(200)
-      .json({ ...filteredUser, token });
+      .json({ ...filteredUser });
   } catch (error) {
     next(error);
   }

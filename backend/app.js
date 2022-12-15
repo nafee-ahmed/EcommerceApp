@@ -38,7 +38,7 @@ mongoose
 app.use("/api/auth", authRoute);
 
 app.get("/api/", verifyToken, (req, res, next) => {
-  res.status(200).json("accessed it");
+  res.status(200).json(req.user);
 });
 
 app.use(errorMiddleware);

@@ -10,19 +10,24 @@ import {
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
 import SignupImage from "../assets/signup-image.png";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FieldInput from "../components/FieldInput";
+import { AuthContext } from "../contexts/AuthContext";
+import { ax } from "../utils/constants";
 
 function SignupPage() {
   const [isLessThanLG] = useMediaQuery("(max-width: 62em)");
   const formWidth = { base: "100%", sm: "100%", lg: "70%" };
+  const { loading, error, authDispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
+
+  let invalidFields = error ? error.fields : [];
 
   return (
     <HStack w="100%" h="100vh">
@@ -61,9 +66,19 @@ function SignupPage() {
               .required("Password required")
               .min(6, "Password is too short"),
           })}
-          onSubmit={(values, actions) => {
-            alert(JSON.stringify(values, null, 2));
-            actions.resetForm();
+          onSubmit={async (values, actions) => {
+            authDispatch({ type: "AUTH_START" });
+            try {
+              const res = await ax.post("/auth/signup", values);
+              authDispatch({ type: "AUTH_SUCCESS", payload: res.data });
+              actions.resetForm();
+              navigate("/");
+            } catch (err) {
+              authDispatch({
+                type: "AUTH_FAILURE",
+                payload: err.response?.data,
+              });
+            }
           }}
         >
           {(formik) => (
@@ -79,6 +94,7 @@ function SignupPage() {
                 type="email"
                 focusBorderColor="#25ABB2"
                 name="email"
+                isError={invalidFields.includes("email")}
               />
 
               <FieldInput
@@ -96,6 +112,7 @@ function SignupPage() {
               />
 
               <Button
+                disabled={loading}
                 color="white"
                 colorScheme="green"
                 width="100%"
@@ -109,6 +126,7 @@ function SignupPage() {
                 <Text fontSize={14}>Already have an account?</Text>
               </Box>
               <Button
+                disabled={loading}
                 width="100%"
                 color="white"
                 colorScheme="teal"

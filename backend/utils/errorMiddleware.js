@@ -21,7 +21,7 @@ const handleDuplicateKeyError = (err, res) => {
   const field = Object.keys(err.keyValue); // extract field for error
   const code = 409;
   const error = `An account with that ${field} already exists. `;
-  res.status(code).send({ messages: error, fields: field });
+  res.status(code).send({ message: error, fields: field });
 };
 //handle field formatting, empty fields, and mismatched passwords
 const handleValidationError = (err, res) => {
@@ -34,6 +34,6 @@ const handleValidationError = (err, res) => {
     const formattedErrors = errors.join("");
     res.status(code).send({ messages: formattedErrors, fields: fields });
   } else {
-    res.status(code).send({ messages: errors, fields: fields });
+    res.status(code).send({ message: errors, fields: fields });
   }
 };
