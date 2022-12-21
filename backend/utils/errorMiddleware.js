@@ -32,7 +32,7 @@ const handleValidationError = (err, res) => {
   // Detecting if errors > 1, and joining all messages together with a space, so they become one string.
   if (errors.length > 1) {
     const formattedErrors = errors.join("");
-    res.status(code).send({ messages: formattedErrors, fields: fields });
+    res.status(code).send({ message: formattedErrors, fields: fields });
   } else {
     res.status(code).send({ message: errors, fields: fields });
   }

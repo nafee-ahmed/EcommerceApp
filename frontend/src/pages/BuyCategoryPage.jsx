@@ -30,6 +30,9 @@ import productSample from "../assets/product-sample.png";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import { useState } from "react";
 import ProductOrService from "../components/ProductOrService";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function BuyCategoryPage() {
   const toast = useToast();
@@ -39,6 +42,9 @@ function BuyCategoryPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const quantityErrorHandler = () => {
     toast({
       title: `Do not exceed the limit`,
@@ -46,6 +52,14 @@ function BuyCategoryPage() {
       isClosable: true,
     });
     setQuantity(1);
+  };
+
+  const addToCartHandler = async () => {
+    if (user === null) {
+      navigate("/login");
+    } else {
+      console.log("logged in");
+    }
   };
 
   return (
@@ -133,7 +147,12 @@ function BuyCategoryPage() {
                   my={6}
                   justifyContent={"end"}
                 >
-                  <Button colorScheme="teal" borderRadius="3xl" px={5}>
+                  <Button
+                    colorScheme="teal"
+                    borderRadius="3xl"
+                    px={5}
+                    onClick={addToCartHandler}
+                  >
                     Add to Cart
                   </Button>
                   <IconButton

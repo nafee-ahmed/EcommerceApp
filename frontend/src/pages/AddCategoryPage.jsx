@@ -21,9 +21,12 @@ import FieldInput from "../components/FieldInput";
 import { Field, Formik } from "formik";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import TagInput from "../components/TagInput";
+import CustomRadio from "../components/CustomRadio";
 
 function AddCategoryPage() {
   const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
+  const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
 
   const { cat } = useParams();
 
@@ -42,18 +45,22 @@ function AddCategoryPage() {
           productName: "",
           isDelivery: "",
           price: "",
-          location: "",
+          tags: [],
           condition: "",
-          warranty: "",
+          quantity: "",
           description: "",
         }}
         validationSchema={Yup.object({
           productName: Yup.string().required("Product name required"),
           isDelivery: Yup.string().required("Delivery option required"),
           price: Yup.number().required("Price required"),
-          location: Yup.string().required("Location required"),
+          tags: Yup.array()
+            .of(Yup.string())
+            .min(2, "Enter at least 2 tags")
+            .max(3, "Enter maximum 3 tags")
+            .required("Tags required"),
           condition: Yup.string().required("Condition required"),
-          warranty: Yup.string().required("Warranty required"),
+          quantity: Yup.number().required("Quantity required"),
           description: Yup.string().required("Description required"),
         })}
         onSubmit={(values, actions) => {
@@ -75,47 +82,16 @@ function AddCategoryPage() {
               <Grid
                 w="100%"
                 h="100%"
-                templateRows="repeat(5, 1fr)"
+                templateRows="repeat(7, 1fr)"
                 templateColumns="repeat(2, 1fr)"
                 gap={5}
               >
-                <GridItem rowSpan={1} colSpan={isLessThanMD ? 2 : 1}>
+                <GridItem rowSpan={1} colSpan={2}>
                   <FieldInput
                     placeholder="Product Name"
                     focusBorderColor="#25ABB2"
                     name="productName"
                   />
-                </GridItem>
-
-                <GridItem
-                  rowSpan={1}
-                  colSpan={isLessThanMD ? 2 : 1}
-                  justifySelf={isLessThanMD ? "center" : "start"}
-                >
-                  <FormControl
-                    isInvalid={
-                      formik.errors.isDelivery && formik.touched.isDelivery
-                    }
-                  >
-                    <HStack spacing="10px" alignItems="start">
-                      <Text fontSize="sm" as="span">
-                        Provide delivery options?
-                      </Text>
-
-                      <Text as="label" fontSize="sm">
-                        <Field type="radio" name="isDelivery" value="yes" />
-                        Yes
-                      </Text>
-
-                      <Text as="label" fontSize="sm">
-                        <Field type="radio" name="isDelivery" value="no" />
-                        No
-                      </Text>
-                      <FormErrorMessage>
-                        {formik.errors.isDelivery}
-                      </FormErrorMessage>
-                    </HStack>
-                  </FormControl>
                 </GridItem>
 
                 <GridItem rowSpan={1} colSpan={isLessThanMD ? 2 : 1}>
@@ -127,11 +103,19 @@ function AddCategoryPage() {
                   />
                 </GridItem>
 
-                <GridItem rowSpan={1} colSpan={isLessThanMD ? 2 : 1}>
-                  <FieldInput
-                    placeholder="Location"
+                <GridItem
+                  rowSpan={1}
+                  colSpan={isLessThanMD ? 2 : 1}
+                  justifySelf={isLessThanSM ? "end" : "start"}
+                >
+                  <CustomRadio name="isDelivery" />
+                </GridItem>
+
+                <GridItem rowSpan={1} colSpan={2}>
+                  <TagInput
+                    placeholder="Tags"
                     focusBorderColor="#25ABB2"
-                    name="location"
+                    name="tags"
                   />
                 </GridItem>
 
@@ -145,14 +129,16 @@ function AddCategoryPage() {
 
                 <GridItem rowSpan={1} colSpan={isLessThanMD ? 2 : 1}>
                   <FieldInput
-                    placeholder="Any Warranty?"
+                    type="number"
+                    placeholder="Enter quantity available"
                     focusBorderColor="#25ABB2"
-                    name="warranty"
+                    name="quantity"
                   />
                 </GridItem>
 
-                <GridItem rowSpan={1} colSpan={2}>
+                <GridItem rowSpan={2} colSpan={2}>
                   <FieldInput
+                    label="textbox"
                     placeholder="Description"
                     focusBorderColor="#25ABB2"
                     name="description"

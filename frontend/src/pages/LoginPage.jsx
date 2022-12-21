@@ -14,7 +14,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import LoginImage from "../assets/login-image.png";
@@ -24,8 +24,12 @@ import { ax } from "../utils/constants";
 
 function LoginPage() {
   const [isLessThanSM] = useMediaQuery("(max-width: 62em)");
-  const { loading, authDispatch } = useContext(AuthContext);
+  const { loading, authDispatch, user } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    user !== null && navigate("/");
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -43,7 +47,7 @@ function LoginPage() {
       try {
         const res = await ax.post("/auth/login", values);
         authDispatch({ type: "AUTH_SUCCESS", payload: res.data });
-        navigate("/");
+        navigate(-1) || navigate("/");
       } catch (err) {
         authDispatch({ type: "AUTH_FAILURE", payload: err.response?.data });
       }

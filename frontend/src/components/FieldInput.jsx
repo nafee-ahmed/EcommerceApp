@@ -1,4 +1,9 @@
-import { FormControl, FormErrorMessage, Input, Radio } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormErrorMessage,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
 import { Field, useField } from "formik";
 import React from "react";
 
@@ -7,7 +12,7 @@ function FieldInput({ label, isError = false, ...props }) {
   return (
     <FormControl isInvalid={(meta.error && meta.touched) || isError}>
       <Field
-        as={label === "radio" ? Radio : Input}
+        as={label === "textbox" ? Textarea : Input}
         //   onChange onBlur value
         {...field}
         {...props}

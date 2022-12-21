@@ -21,11 +21,13 @@ import { BiLogOutCircle } from "react-icons/bi";
 import { FaBars, FaSearch } from "react-icons/fa";
 import { GoListUnordered } from "react-icons/go";
 import { HiShoppingCart } from "react-icons/hi";
-import { IoMdAdd } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { IoMdAdd, IoMdLogIn } from "react-icons/io";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { AuthContext } from "../contexts/AuthContext";
+import { ax } from "../utils/constants";
 import CustomNavLink from "./CustomNavLink";
+import PrivateComponent from "./PrivateComponent";
 import SearchBar from "./SearchBar";
 
 function TopNavbar() {
@@ -33,8 +35,20 @@ function TopNavbar() {
   const [isShowSearch, setIsShowSearch] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const sidePadding = 4;
+  const navigate = useNavigate();
 
-  const { user } = useContext(AuthContext);
+  const { user, loading, authDispatch } = useContext(AuthContext);
+
+  async function handleLogout() {
+    authDispatch({ type: "AUTH_START" });
+    try {
+      await ax.post("/auth/logout");
+      authDispatch({ type: "LOGOUT" });
+      navigate("/login");
+    } catch (err) {
+      authDispatch({ type: "AUTH_FAILURE", payload: err.response?.data });
+    }
+  }
 
   return isShowSearch ? (
     <Flex
@@ -81,41 +95,61 @@ function TopNavbar() {
               isRound={true}
               onClick={() => setIsShowSearch(!isShowSearch)}
             />
-            <IconButton
-              size={"md"}
-              colorScheme="teal"
-              aria-label="Search"
-              icon={<FaBars />}
-              isRound={true}
-              onClick={onOpen}
+            <PrivateComponent
+              authComp={
+                <IconButton
+                  size={"md"}
+                  colorScheme="teal"
+                  aria-label="Navbar"
+                  icon={<FaBars />}
+                  isRound={true}
+                  onClick={onOpen}
+                />
+              }
             />
           </>
         )}
         {!isLessThanSM && (
           <>
-            {user !== null && (
-              <CustomNavLink
-                route="/logout"
-                ariaText="Logout"
-                icon={<BiLogOutCircle size="100%" />}
-                iconVariant="ghost"
-              />
-            )}
-            <CustomNavLink
-              route="/add/category"
-              ariaText="Add Product"
-              icon={<IoMdAdd size="80%" />}
-            />
-            <CustomNavLink
-              route="/cart"
-              ariaText="Cart"
-              icon={<HiShoppingCart size="80%" />}
-              iconVariant="ghost"
-            />
-            <CustomNavLink
-              route="/"
-              ariaText="Orders"
-              icon={<GoListUnordered size="70%" />}
+            <PrivateComponent
+              defaultComp={
+                <CustomNavLink
+                  route="/login"
+                  ariaText="Logout"
+                  icon={<IoMdLogIn size="100%" />}
+                  iconVariant="solid"
+                />
+              }
+              authComp={
+                <>
+                  <IconButton
+                    disabled={loading}
+                    onClick={handleLogout}
+                    size={"md"}
+                    colorScheme="teal"
+                    isRound={true}
+                    aria-label="Logout"
+                    icon={<BiLogOutCircle size="100%" />}
+                    variant="ghost"
+                  />
+                  <CustomNavLink
+                    route="/add/category"
+                    ariaText="Add Product"
+                    icon={<IoMdAdd size="80%" />}
+                  />
+                  <CustomNavLink
+                    route="/cart"
+                    ariaText="Cart"
+                    icon={<HiShoppingCart size="80%" />}
+                    iconVariant="ghost"
+                  />
+                  <CustomNavLink
+                    route="/"
+                    ariaText="Orders"
+                    icon={<GoListUnordered size="70%" />}
+                  />
+                </>
+              }
             />
           </>
         )}

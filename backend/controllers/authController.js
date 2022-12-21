@@ -17,12 +17,19 @@ module.exports.signup = async (req, res, next) => {
 
     const user = await newUser.save();
     const { password, ...filteredUser } = user._doc;
-    console.log({...filteredUser});
+    console.log({ ...filteredUser });
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
     res
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie(
+        "access_token",
+        token,
+        { httpOnly: true },
+        {
+          expires: new Date(Date.now() + 25892000000), // set expiry of 1month
+        }
+      )
       .status(201)
-      .json({...filteredUser});
+      .json({ ...filteredUser });
   } catch (error) {
     next(error);
   }
@@ -42,11 +49,25 @@ module.exports.login = async (req, res, next) => {
     const { password, ...filteredUser } = user._doc;
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     res
-      .cookie("access_token", token, {
-        expires: new Date(Date.now() + 25892000000), // set expiry of 1month
-      })
+      .cookie(
+        "access_token",
+        token,
+        { httpOnly: true },
+        {
+          expires: new Date(Date.now() + 25892000000), // set expiry of 1month
+        }
+      )
       .status(200)
       .json({ ...filteredUser });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.logout = async (req, res, next) => {
+  try {
+    res.clearCookie("access_token");
+    res.status(200).json("User Logged out");
   } catch (error) {
     next(error);
   }
