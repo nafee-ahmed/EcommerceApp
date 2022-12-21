@@ -7,7 +7,6 @@ function RadioCard(props) {
 
   const input = getInputProps();
   const checkbox = getCheckboxProps();
-  console.log(isLessThanSM);
   return (
     <Box as="label">
       <input {...input} />

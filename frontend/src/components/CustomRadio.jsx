@@ -1,12 +1,4 @@
-import {
-  Box,
-  FormControl,
-  HStack,
-  Stack,
-  useMediaQuery,
-  useRadioGroup,
-  VStack,
-} from "@chakra-ui/react";
+import { FormControl, Stack, useRadioGroup } from "@chakra-ui/react";
 import { Field, useField } from "formik";
 import React from "react";
 import RadioCard from "./RadioCard";

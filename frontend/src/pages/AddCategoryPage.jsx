@@ -1,32 +1,33 @@
 import {
   Box,
   Button,
-  FormControl,
-  FormErrorMessage,
   Grid,
   GridItem,
   Heading,
-  HStack,
   Image,
   Input,
   Stack,
-  Text,
   useMediaQuery,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
+import { Formik } from "formik";
 import React from "react";
-import PageWrapper from "../components/PageWrapper";
-import uploadImg from "../assets/uploading-img.png";
-import FieldInput from "../components/FieldInput";
-import { Field, Formik } from "formik";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
-import TagInput from "../components/TagInput";
+import uploadImg from "../assets/uploading-img.png";
 import CustomRadio from "../components/CustomRadio";
+import FieldInput from "../components/FieldInput";
+import PageWrapper from "../components/PageWrapper";
+import TagInput from "../components/TagInput";
+import { ax } from "../utils/constants";
 
 function AddCategoryPage() {
   const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
+  const toast = useToast();
+  const [loading, setLoading] = useState(false);
 
   const { cat } = useParams();
 
@@ -63,10 +64,29 @@ function AddCategoryPage() {
           quantity: Yup.number().required("Quantity required"),
           description: Yup.string().required("Description required"),
         })}
-        onSubmit={(values, actions) => {
-          console.log("first");
+        onSubmit={async (values, actions) => {
+          setLoading(true);
+          try {
+            const res = await ax.post(
+              `/category?type=${cat.toLowerCase()}`,
+              values
+            );
+            console.log(res.data);
+            toast({
+              title: `Added!`,
+              status: "success",
+              isClosable: true,
+            });
+          } catch (err) {
+            toast({
+              title: `${err.response?.data}`,
+              status: "error",
+              isClosable: true,
+            });
+          }
+          setLoading(false);
 
-          alert(JSON.stringify(values, null, 2));
+          // alert(JSON.stringify(values, null, 2));
         }}
       >
         {(formik) => (
@@ -156,6 +176,7 @@ function AddCategoryPage() {
 
                 <GridItem rowSpan={1} colSpan={2}>
                   <Button
+                    disabled={loading}
                     width="100%"
                     colorScheme="green"
                     type="button"
