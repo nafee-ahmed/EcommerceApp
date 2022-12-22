@@ -48,11 +48,13 @@ function TagInput({ label, focusBorderColor, ...props }) {
               focusBorderColor={focusBorderColor}
               type="text"
               placeholder="Press Space to add tag"
-              onKeyDown={(event) => {
+              onKeyUp={(event) => {
                 if (
                   (event.key === " " ||
                     event.code === "Space" ||
-                    event.key === "Spacebar") &&
+                    event.key === "Spacebar" ||
+                    event.target.value[event.target.value.length - 1] ===
+                      " ") &&
                   event.target.value.trim() !== ""
                 ) {
                   if (form.values.tags.length >= 3) {

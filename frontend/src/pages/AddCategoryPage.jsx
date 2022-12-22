@@ -4,21 +4,18 @@ import {
   Grid,
   GridItem,
   Heading,
-  Image,
-  Input,
   Stack,
   useMediaQuery,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import { Formik } from "formik";
-import React from "react";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
-import uploadImg from "../assets/uploading-img.png";
 import CustomRadio from "../components/CustomRadio";
 import FieldInput from "../components/FieldInput";
+import ImageInput from "../components/ImageInput";
 import PageWrapper from "../components/PageWrapper";
 import TagInput from "../components/TagInput";
 import { ax } from "../utils/constants";
@@ -30,6 +27,7 @@ function AddCategoryPage() {
   const [loading, setLoading] = useState(false);
 
   const { cat } = useParams();
+  const navigate = useNavigate();
 
   return (
     <PageWrapper>
@@ -44,25 +42,31 @@ function AddCategoryPage() {
       <Formik
         initialValues={{
           productName: "",
-          isDelivery: "",
+          isDelivery: "Delivery",
           price: "",
           tags: [],
           condition: "",
           quantity: "",
           description: "",
+          image: "",
         }}
         validationSchema={Yup.object({
           productName: Yup.string().required("Product name required"),
           isDelivery: Yup.string().required("Delivery option required"),
-          price: Yup.number().required("Price required"),
+          price: Yup.number()
+            .moreThan(0, "Must be 0 and above")
+            .required("Price required"),
           tags: Yup.array()
             .of(Yup.string())
             .min(2, "Enter at least 2 tags")
             .max(3, "Enter maximum 3 tags")
             .required("Tags required"),
           condition: Yup.string().required("Condition required"),
-          quantity: Yup.number().required("Quantity required"),
+          quantity: Yup.number()
+            .moreThan(0, "Must be 0 and above")
+            .required("Quantity required"),
           description: Yup.string().required("Description required"),
+          image: Yup.string().required("Image required"),
         })}
         onSubmit={async (values, actions) => {
           setLoading(true);
@@ -71,12 +75,12 @@ function AddCategoryPage() {
               `/category?type=${cat.toLowerCase()}`,
               values
             );
-            console.log(res.data);
             toast({
               title: `Added!`,
               status: "success",
               isClosable: true,
             });
+            navigate("/");
           } catch (err) {
             toast({
               title: `${err.response?.data}`,
@@ -85,19 +89,12 @@ function AddCategoryPage() {
             });
           }
           setLoading(false);
-
           // alert(JSON.stringify(values, null, 2));
         }}
       >
         {(formik) => (
           <Stack direction="row" w="100%" alignItems="start" mb={4}>
-            {!isLessThanMD && (
-              <VStack align="stretch">
-                <Image src={uploadImg} boxSize="70%" />
-                <Input type="file" size="sm" width="70%" />
-              </VStack>
-            )}
-
+            {!isLessThanMD && <ImageInput name="image" />}
             <Box w="100%" h="70%">
               <Grid
                 w="100%"
@@ -167,10 +164,7 @@ function AddCategoryPage() {
 
                 {isLessThanMD && (
                   <GridItem rowSpan={1} colSpan={2}>
-                    <VStack align="stretch" alignItems="center">
-                      <Image src={uploadImg} boxSize="120px" />
-                      <Input type="file" size="sm" width="70%" />
-                    </VStack>
+                    <ImageInput name="image" />
                   </GridItem>
                 )}
 

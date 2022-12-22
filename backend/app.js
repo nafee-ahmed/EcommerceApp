@@ -12,15 +12,16 @@ const { verifyToken, verifyUser } = require("./utils/verifyToken.js");
 const errorMiddleware = require("./utils/errorMiddleware.js");
 
 const app = express();
-app.use(express.json());
-app.use(cookieParser());
-
 const corsOptions = {
   origin: `${process.env.FRONTEND_LINK}`,
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
+  Headers: true,
 };
 app.use(cors(corsOptions));
+
+app.use(express.json({ limit: "50mb" }));
+app.use(cookieParser());
 
 mongoose.set("strictQuery", true);
 mongoose

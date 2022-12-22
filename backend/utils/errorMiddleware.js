@@ -1,4 +1,6 @@
 module.exports = (err, req, res, next) => {
+  console.log(err);
+
   if (err.name === "ValidationError")
     return (err = handleValidationError(err, res));
   if (err.code && err.code == 11000)
@@ -7,7 +9,6 @@ module.exports = (err, req, res, next) => {
   const errMessage = err.message || "Something went wrong";
   const errStatus = err.status || 500;
   const errStack = err.stack;
-  console.log(err);
   return res.status(500).json({
     success: false,
     status: errStatus,

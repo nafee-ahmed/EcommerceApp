@@ -14,6 +14,7 @@ const categorySchema = new mongoose.Schema({
   price: {
     type: Number,
     required: [true, "Price required"],
+    min: [0, "Must be 0 and above"],
   },
   tags: {
     type: [String],
@@ -26,6 +27,7 @@ const categorySchema = new mongoose.Schema({
   quantity: {
     type: Number,
     required: [true, "Quantity required"],
+    min: [0, "Must be 0 and above"],
   },
   description: {
     type: String,
@@ -39,6 +41,11 @@ const categorySchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  picture: {
+    type: String,
+    required: [true, "Upload picture"],
+  },
+  pictureId: String,
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
