@@ -7,3 +7,5 @@ export const ax = axios.create({
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
+
+export const tealColor = "#25ACB2";

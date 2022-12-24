@@ -1,5 +1,4 @@
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   Image,
@@ -31,6 +30,7 @@ function ImageInput({ label = "large", ...props }) {
             <Image
               src={image === undefined ? uploadImg : image}
               boxSize={label === "large" ? "70%" : "120px"}
+              borderRadius="md"
             />
             <Input
               type="file"

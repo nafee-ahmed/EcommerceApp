@@ -2,9 +2,11 @@ import {
   Box,
   Card,
   CardBody,
+  Divider,
   Heading,
   HStack,
   Image,
+  Tag,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -12,7 +14,7 @@ import React from "react";
 import { useState } from "react";
 import productSample from "../assets/product-sample.png";
 
-function CategoryCard() {
+function CategoryCard({ image, tags, price, name }) {
   const [isHovering, setIsHovering] = useState(false);
   return (
     <Card
@@ -27,7 +29,7 @@ function CategoryCard() {
       <CardBody>
         <Box overflow="hidden">
           <Image
-            src={productSample}
+            src={image || productSample}
             alt="Category Image"
             borderRadius="lg"
             verticalAlign="middle"
@@ -38,15 +40,19 @@ function CategoryCard() {
         <HStack justifyContent="space-between">
           <VStack alignItems="start" justifyItems="start" spacing={1} mt={2}>
             <Text fontSize="xs" color="#773903">
-              Electronics
+                {tags?.map((tag) => (
+                  <Tag key={tag} variant="solid" colorScheme="teal" mr={2}>
+                    {tag}
+                  </Tag>
+                ))}
             </Text>
-            <Heading size="md">Pixel Airbuds</Heading>
+            <Heading size="md">{name}</Heading>
             <Text fontSize="xs" fontWeight="bold">
               4.5/5 Rating
             </Text>
           </VStack>
           <Heading size="md" color="#FF5D15">
-            $215
+            ${price}
           </Heading>
         </HStack>
       </CardBody>

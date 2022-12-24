@@ -4,10 +4,14 @@ import {
   GridItem,
   Image,
   SimpleGrid,
+  SkeletonCircle,
+  SkeletonText,
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
+import { useEffect } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import ForYou from "../assets/for-you.png";
 import LandingImg from "../assets/landing-img.png";
@@ -16,14 +20,20 @@ import PageWrapper from "../components/PageWrapper";
 import ProductOrService from "../components/ProductOrService";
 import SideBar from "../components/SideBar";
 import TagList from "../components/TagList";
+import { CategoryContext } from "../contexts/CategoryContext";
 import useFetch from "../hooks/useFetch";
 
 function HomePage() {
   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
   const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
 
-  const { data } = useFetch("/");
-  console.log(data);
+  const { currentTab, currentType } = useContext(CategoryContext);
+  const categoriesUrl =
+    currentTab === undefined
+      ? `/category/${currentType}/`
+      : `/category/${currentType}/?tags=${currentTab}`;
+  const { data, error, loading, reFetch } = useFetch(categoriesUrl);
+  // const { data, error, loading, reFetch } = useFetch('/');
 
   return (
     <PageWrapper>
@@ -54,18 +64,32 @@ function HomePage() {
 
         <SimpleGrid columns={{ sm: 2, md: 3, lg: 4 }} spacing={4} width="100%">
           {!isLessThanMD && <Image src={ForYou} />}
-          <Link to="/buy/Product">
-            <CategoryCard />
-          </Link>
-          <Link to="/buy/Product">
-            <CategoryCard />
-          </Link>{" "}
-          <Link to="/buy/Product">
-            <CategoryCard />
-          </Link>{" "}
-          <Link to="/buy/Product">
-            <CategoryCard />
-          </Link>
+          {loading
+            ? Array.from({ length: 3 }, (item, index) => (
+                <Box padding="6" boxShadow="lg" bg="white" key={index}>
+                  <SkeletonCircle size="10" />
+                  <SkeletonText
+                    mt="4"
+                    noOfLines={4}
+                    spacing="4"
+                    skeletonHeight="2"
+                  />
+                </Box>
+              ))
+            : data?.map((category) => (
+                <Link to="/buy/Product" key={category._id}>
+                  <CategoryCard
+                    image={category?.picture}
+                    tags={
+                      currentTab === undefined
+                        ? category.tags
+                        : Array(currentTab)
+                    }
+                    price={category.price}
+                    name={category.productName}
+                  />
+                </Link>
+              ))}
         </SimpleGrid>
       </VStack>
     </PageWrapper>

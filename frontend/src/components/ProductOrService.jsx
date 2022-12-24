@@ -9,14 +9,15 @@ function ProductOrService() {
         <Tab>Products</Tab>
         <Tab>Services</Tab>
       </TabList>
-      <TabPanels>
+      <TagList />
+      {/* <TabPanels>
         <TabPanel>
           <TagList />
         </TabPanel>
         <TabPanel>
           <TagList />
         </TabPanel>
-      </TabPanels>
+      </TabPanels> */}
     </Tabs>
   );
 }

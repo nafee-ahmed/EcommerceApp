@@ -8,6 +8,7 @@ const cors = require("cors");
 
 const authRoute = require("./routes/auth.js");
 const categoryRoute = require("./routes/category.js");
+const tagRoute = require("./routes/tag.js");
 const { verifyToken, verifyUser } = require("./utils/verifyToken.js");
 const errorMiddleware = require("./utils/errorMiddleware.js");
 
@@ -39,9 +40,10 @@ mongoose
 // middlewares for express Routes
 app.use("/api/auth", authRoute);
 app.use("/api/category", categoryRoute);
+app.use("/api/tag", tagRoute);
 
 app.get("/api/", verifyToken, (req, res, next) => {
-  res.status(200).json(req.user);
+  res.status(200).json('req.user');
 });
 
 app.use(errorMiddleware);
