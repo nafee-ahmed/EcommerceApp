@@ -1,7 +1,9 @@
 import { useToast } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { createContext, useReducer } from "react";
+import useCart from "../hooks/useCart";
 import { AuthReducer } from "../reducers/AuthReducer";
+import { CartContext } from "./CartContext";
 
 const INITIAL_STATE = {
   user: JSON.parse(localStorage.getItem("user")) || null,
@@ -15,6 +17,9 @@ export const AuthContextProvider = ({ children }) => {
   const [authState, authDispatch] = useReducer(AuthReducer, INITIAL_STATE);
   const toast = useToast();
 
+  const { cartDispatch, cart } = useContext(CartContext);
+  const { viewCartList } = useCart();
+
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(authState.user));
   }, [authState.user]);
@@ -26,7 +31,7 @@ export const AuthContextProvider = ({ children }) => {
         status: "error",
         isClosable: true,
       });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState.error]);
 
   return (

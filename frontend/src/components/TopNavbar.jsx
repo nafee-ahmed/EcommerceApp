@@ -1,4 +1,7 @@
 import {
+  Avatar,
+  AvatarBadge,
+  Badge,
   Box,
   Drawer,
   DrawerBody,
@@ -10,11 +13,13 @@ import {
   HStack,
   IconButton,
   Image,
+  Stack,
+  Text,
   useDisclosure,
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BiLogOutCircle } from "react-icons/bi";
@@ -25,6 +30,8 @@ import { IoMdAdd, IoMdLogIn } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { AuthContext } from "../contexts/AuthContext";
+import { CartContext } from "../contexts/CartContext";
+import useCart from "../hooks/useCart";
 import { ax } from "../utils/constants";
 import CustomNavLink from "./CustomNavLink";
 import PrivateComponent from "./PrivateComponent";
@@ -38,6 +45,7 @@ function TopNavbar() {
   const navigate = useNavigate();
 
   const { user, loading, authDispatch } = useContext(AuthContext);
+  const { counter } = useContext(CartContext);
 
   async function handleLogout() {
     authDispatch({ type: "AUTH_START" });
@@ -137,12 +145,22 @@ function TopNavbar() {
                     ariaText="Add Product"
                     icon={<IoMdAdd size="80%" />}
                   />
-                  <CustomNavLink
-                    route="/cart"
-                    ariaText="Cart"
-                    icon={<HiShoppingCart size="80%" />}
-                    iconVariant="ghost"
-                  />
+
+                  <Box pos={"relative"}>
+                    <Box pos={"absolute"} top="-2" zIndex={1}>
+                      <Badge borderRadius="full" px="2" colorScheme="red">
+                      {counter}
+                      </Badge>
+                    </Box>
+
+                    <CustomNavLink
+                      route="/cart"
+                      ariaText="Cart"
+                      icon={<HiShoppingCart size="80%" />}
+                      iconVariant="ghost"
+                    />
+                  </Box>
+
                   <CustomNavLink
                     route="/"
                     ariaText="Orders"

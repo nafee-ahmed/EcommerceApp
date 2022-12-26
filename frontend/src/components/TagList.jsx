@@ -13,7 +13,6 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
 import { CategoryContext } from "../contexts/CategoryContext";
 import { ax } from "../utils/constants.js";
 
@@ -39,9 +38,20 @@ function TagList(isEnabled = true) {
     viewTabs();
   }, [currentType]);
 
+  const changeTab = (tab, index) =>
+    categoryDispatch({
+      type: "SET_CURRENT_TAB",
+      payload: { tag: tab?.tag, index: index },
+    });
+
   return (
     <HStack overflowX="auto" width="100%" alignSelf="start">
-      <Tabs variant="soft-rounded" colorScheme="teal">
+      <Tabs
+        variant="soft-rounded"
+        colorScheme="teal"
+        isLazy
+        index={isEnabled === false ? undefined : currentIndex}
+      >
         <Box overflowX={"auto"} width="100%">
           {loading ? (
             <Skeleton w={"60vw"}>
@@ -52,12 +62,7 @@ function TagList(isEnabled = true) {
               <Tab
                 textOverflow={"hidden"}
                 isDisabled={!isEnabled}
-                onClick={() =>
-                  categoryDispatch({
-                    type: "SET_CURRENT_TAB",
-                    payload: { tag: undefined, index: 0 },
-                  })
-                }
+                onClick={() => changeTab(undefined, 0)}
               >
                 Home
               </Tab>
@@ -66,12 +71,7 @@ function TagList(isEnabled = true) {
                   textOverflow={"hidden"}
                   isDisabled={!isEnabled}
                   key={tab._id}
-                  onClick={() =>
-                    categoryDispatch({
-                      type: "SET_CURRENT_TAB",
-                      payload: { tag: tab.tag, index: index + 1 },
-                    })
-                  }
+                  onClick={() => changeTab(tab, index + 1)}
                 >
                   {tab.tag}
                 </Tab>

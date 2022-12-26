@@ -7,16 +7,6 @@ const useFetch = (url) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  // const ax = axios.create({
-  //   baseURL: backendLink,
-  //   withCredentials: true,
-  // });
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-//     },
-//   };
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);

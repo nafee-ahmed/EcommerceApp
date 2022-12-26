@@ -24,6 +24,11 @@ export const AuthReducer = (state, action) => {
         loading: false,
         error: null,
       };
+    case "SET_LOADING":
+      return {
+        loading: action.payload,
+        ...state,
+      };
     default:
       throw Error("Auth Reducer Error");
   }

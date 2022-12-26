@@ -14,6 +14,12 @@ export const CategoryReducer = (state, action) => {
         currentType: action.payload,
         currentIndex: 0,
       };
+    case "RESET_OPTIONS":
+      return {
+        currentTab: undefined,
+        currentType: "product",
+        currentIndex: 0,
+      };
     default:
       throw Error("Category Selection Reducer Error");
   }

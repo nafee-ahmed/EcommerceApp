@@ -1,6 +1,7 @@
 const Category = require("../models/Category");
 const Tag = require("../models/Tag");
 const { uploadToCloudinary } = require("../utils/cloudinary");
+const { getUserRating } = require("./ratingController");
 const { addTagWithCategory } = require("./tagController");
 
 module.exports.createCategory = async (req, res, next) => {
@@ -40,22 +41,42 @@ module.exports.getCategories = async (req, res, next) => {
   const tags = req.query.tags?.split(",");
   let categories = [];
 
-  if (!tags) {
-    // if there are no req.query of tags
-    categories = await Category.find({ type: categoryType });
-  } else {
-    let res = [];
-    for (let tag of tags) {
-      const unfilteredCats = await Tag.find({
-        $and: [{ type: categoryType }, { tag }],
-      })
-        .populate("categories")
-        .select("categories");
-      let foundCategories = [...unfilteredCats].map((tag) => tag.categories);
-      res.push(...foundCategories);
+  try {
+    if (!tags) {
+      // if there are no req.query of tags
+      categories = await Category.find({ type: categoryType });
+    } else {
+      let res = [];
+      for (let tag of tags) {
+        const unfilteredCats = await Tag.find({
+          $and: [{ type: categoryType }, { tag }],
+        })
+          .populate("categories")
+          .select("categories");
+        let foundCategories = [...unfilteredCats].map((tag) => tag.categories);
+        res.push(...foundCategories);
+      }
+      res = res.flat();
+      categories = uniqueArray(res);
     }
-    res = res.flat();
-    categories = uniqueArray(res);
+    res.status(200).json(categories);
+  } catch (error) {
+    next(error);
   }
-  res.status(200).json(categories);
 };
+
+const findCategoryById = async (categoryID) => {
+  return await Category.findById(categoryID);
+};
+
+module.exports.getCategory = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const category = await findCategoryById(id);
+    res.status(200).json({ ...category._doc });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.findCategoryById = findCategoryById;

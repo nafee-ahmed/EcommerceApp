@@ -23,7 +23,11 @@ module.exports.addTagWithCategory = async (tags, category) => {
 };
 
 module.exports.getTags = async (req, res, next) => {
-  const categoryType = req.query.categoryType;
-  const tags = await Tag.find({ type: categoryType });
-  res.status(200).json(tags);
+  try {
+    const categoryType = req.query.categoryType;
+    const tags = await Tag.find({ type: categoryType });
+    res.status(200).json(tags);
+  } catch (error) {
+    next(errror);
+  }
 };

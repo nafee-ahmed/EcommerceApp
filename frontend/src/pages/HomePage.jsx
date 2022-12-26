@@ -17,8 +17,7 @@ import ForYou from "../assets/for-you.png";
 import LandingImg from "../assets/landing-img.png";
 import CategoryCard from "../components/CategoryCard";
 import PageWrapper from "../components/PageWrapper";
-import ProductOrService from "../components/ProductOrService";
-import SideBar from "../components/SideBar";
+import CategoryOptions from "../components/CategoryOptions";
 import TagList from "../components/TagList";
 import { CategoryContext } from "../contexts/CategoryContext";
 import useFetch from "../hooks/useFetch";
@@ -27,18 +26,23 @@ function HomePage() {
   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
   const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
 
-  const { currentTab, currentType } = useContext(CategoryContext);
+  const { currentTab, currentType, categoryDispatch } =
+    useContext(CategoryContext);
   const categoriesUrl =
     currentTab === undefined
-      ? `/category/${currentType}/`
-      : `/category/${currentType}/?tags=${currentTab}`;
+      ? `/category/type/${currentType}/`
+      : `/category/type/${currentType}/?tags=${currentTab}`;
   const { data, error, loading, reFetch } = useFetch(categoriesUrl);
   // const { data, error, loading, reFetch } = useFetch('/');
+
+  useEffect(() => {
+    categoryDispatch({ type: "RESET_OPTIONS" });
+  }, []);
 
   return (
     <PageWrapper>
       <VStack>
-        {/* Top Section with landing image and sidebar */}
+        {/* Top Section with landing image and CategoryOptions */}
         <Grid
           gridTemplateColumns="repeat(10, 1fr)"
           columnGap={isLessThanMD ? 2 : 4}
@@ -46,12 +50,12 @@ function HomePage() {
         >
           {!isLessThanSM && (
             <GridItem colSpan={2}>
-              <SideBar style={{ float: "left" }} />
+              <CategoryOptions style={{ float: "left" }} />
             </GridItem>
           )}
           <GridItem colSpan={isLessThanSM ? 10 : 8}>
             <VStack alignItems="start">
-              {isLessThanSM ? <ProductOrService /> : <TagList />}
+              {isLessThanSM ? <CategoryOptions label="small" /> : <TagList />}
 
               {!isLessThanSM && (
                 <Box>
@@ -73,11 +77,11 @@ function HomePage() {
                     noOfLines={4}
                     spacing="4"
                     skeletonHeight="2"
-                  />
+                />
                 </Box>
               ))
             : data?.map((category) => (
-                <Link to="/buy/Product" key={category._id}>
+                <Link to={`/buy/${category.type}/${category?._id}`} key={category._id}>
                   <CategoryCard
                     image={category?.picture}
                     tags={

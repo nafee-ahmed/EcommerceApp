@@ -7,8 +7,29 @@ import CategoryPage from "./pages/ChooseCategoryPage";
 import AddCategory from "./pages/AddCategoryPage";
 import BuyCategoryPage from "./pages/BuyCategoryPage";
 import BuyingPage from "./pages/BuyingPage";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from "./contexts/CartContext";
+import { AuthContext } from "./contexts/AuthContext";
+import useCart from "./hooks/useCart";
+import { ax } from "./utils/constants";
 
 function App() {
+  const { user } = useContext(AuthContext);
+  const { cartDispatch, cart } = useContext(CartContext);
+
+  const { refreshCartList } = useCart();
+
+  useEffect(() => {
+    if (user) {
+      const updateCart = async () => {
+        await refreshCartList();
+      };
+      updateCart();
+    } else {
+      cartDispatch({ type: "UPDATE_CART", payload: [] });
+    }
+  }, [user]);
+
   return (
     <div>
       <ChakraProvider>
@@ -17,7 +38,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/add/category" element={<CategoryPage />} />
           <Route path="/category/:cat" element={<AddCategory />} />
-          <Route path="/buy/:cat" element={<BuyCategoryPage />} />
+          <Route path="/buy/:cat/:id" element={<BuyCategoryPage />} />
           <Route path="/cart" element={<BuyingPage />} />
           <Route path="/" element={<HomePage />} />
         </Routes>

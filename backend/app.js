@@ -9,6 +9,8 @@ const cors = require("cors");
 const authRoute = require("./routes/auth.js");
 const categoryRoute = require("./routes/category.js");
 const tagRoute = require("./routes/tag.js");
+const ratingRoute = require("./routes/rating.js");
+const cartRoute = require("./routes/cart.js");
 const { verifyToken, verifyUser } = require("./utils/verifyToken.js");
 const errorMiddleware = require("./utils/errorMiddleware.js");
 
@@ -23,6 +25,13 @@ app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
+
+//delaying response time just for development
+app.use((req, res, next) => {
+  setTimeout(() => {
+    next();
+  }, 1000);
+});
 
 mongoose.set("strictQuery", true);
 mongoose
@@ -41,10 +50,8 @@ mongoose
 app.use("/api/auth", authRoute);
 app.use("/api/category", categoryRoute);
 app.use("/api/tag", tagRoute);
-
-app.get("/api/", verifyToken, (req, res, next) => {
-  res.status(200).json('req.user');
-});
+app.use("/api/rating", ratingRoute);
+app.use("/api/cart", cartRoute);
 
 app.use(errorMiddleware);
 

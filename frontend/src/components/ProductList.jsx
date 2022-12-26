@@ -10,6 +10,9 @@ import {
 } from "@chakra-ui/react";
 
 import ProductItem from "./ProductItem";
+import { useEffect } from "react";
+import { useState } from "react";
+import useCart from "../hooks/useCart";
 
 function ProductList({ label, width }) {
   return (

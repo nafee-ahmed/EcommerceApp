@@ -15,12 +15,12 @@ export const CategoryContextProvider = ({ children }) => {
     CategoryReducer,
     INITIAL_STATE
   );
-
   return (
     <CategoryContext.Provider
       value={{
         currentTab: categoryState.currentTab,
         currentType: categoryState.currentType,
+        currentIndex: categoryState.currentIndex,
         categoryDispatch,
       }}
     >

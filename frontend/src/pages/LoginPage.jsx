@@ -15,11 +15,14 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import React, { useContext, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import LoginImage from "../assets/login-image.png";
 import logo from "../assets/logo.png";
 import { AuthContext } from "../contexts/AuthContext";
+import { CartContext } from "../contexts/CartContext";
+import useCart from "../hooks/useCart";
 import { ax } from "../utils/constants";
 
 function LoginPage() {
