@@ -9,13 +9,18 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
+import { useEffect } from "react";
+import { useContext } from "react";
 import Cart from "../components/Cart";
 import PageWrapper from "../components/PageWrapper";
 import ProductList from "../components/ProductList";
+import { CartContext } from "../contexts/CartContext";
 
 function BuyingPage() {
   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
   // const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
+  const { cart, cartDispatch } = useContext(CartContext);
+  
   return (
     <PageWrapper>
       {/* {isLessThanMD && <Box>MD</Box>}
@@ -33,7 +38,7 @@ function BuyingPage() {
           </TabList>
           <TabPanels align="start">
             <TabPanel>
-              <Cart />
+              <Cart products={cart} />
             </TabPanel>
             <TabPanel>
               <Flex justifyContent="center">

@@ -11,13 +11,20 @@ import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./contexts/CartContext";
 import { AuthContext } from "./contexts/AuthContext";
 import useCart from "./hooks/useCart";
-import { ax } from "./utils/constants";
+import PrivateRoute from "./components/PrivateRoute";
+import useFetch from "./hooks/useFetch";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { STRIPE_PUBLISHABLE_KEY } from "./utils/constants";
 
 function App() {
   const { user } = useContext(AuthContext);
   const { cartDispatch, cart } = useContext(CartContext);
 
   const { refreshCartList } = useCart();
+  const [stripePromise, setStripePromise] = useState(() =>
+    loadStripe(STRIPE_PUBLISHABLE_KEY)
+  );
 
   useEffect(() => {
     if (user) {
@@ -36,10 +43,33 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/add/category" element={<CategoryPage />} />
-          <Route path="/category/:cat" element={<AddCategory />} />
+          <Route
+            path="/add/category"
+            element={
+              <PrivateRoute>
+                <CategoryPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/category/:cat"
+            element={
+              <PrivateRoute>
+                <AddCategory />
+              </PrivateRoute>
+            }
+          />
           <Route path="/buy/:cat/:id" element={<BuyCategoryPage />} />
-          <Route path="/cart" element={<BuyingPage />} />
+          <Route
+            path="/cart"
+            element={
+              <PrivateRoute>
+                <Elements stripe={stripePromise}>
+                  <BuyingPage />
+                </Elements>
+              </PrivateRoute>
+            }
+          />
           <Route path="/" element={<HomePage />} />
         </Routes>
       </ChakraProvider>

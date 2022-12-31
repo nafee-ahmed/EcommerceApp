@@ -1,8 +1,9 @@
 import {
   Box,
+  Button,
+  Card,
   Flex,
   Heading,
-  Icon,
   Image,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -16,14 +17,34 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useContext } from "react";
+import { useEffect } from "react";
 import { HiStar } from "react-icons/hi";
 import productImg from "../assets/product-sample.png";
+import { CartContext } from "../contexts/CartContext";
+import StarRating from "./StarRating";
 
-function ProductItem() {
+function ProductItem({
+  name = "XXX",
+  price = "XXX",
+  isDelivery = true,
+  qty = "XXX",
+  rating = "XXX",
+  qtyAvailable = "XXX",
+  image = productImg,
+  productId,
+}) {
   const toast = useToast();
   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
-//   const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
-  const [quantity, setQuantity] = useState(1);
+  //   const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
+  const [quantity, setQuantity] = useState(qty || 1);
+  const { cartDispatch } = useContext(CartContext);
+  useEffect(() => {
+    cartDispatch({
+      type: "UPDATE_QTY",
+      payload: { id: productId, qty: quantity },
+    });
+  }, [quantity]);
 
   const quantityErrorHandler = () => {
     toast({
@@ -39,7 +60,7 @@ function ProductItem() {
         <Image
           maxH="80%"
           minH="50%"
-          src={productImg}
+          src={image}
           borderRadius="2xl"
           objectFit={"cover"}
         />
@@ -47,28 +68,29 @@ function ProductItem() {
 
       <VStack alignItems="start">
         <Heading as="h5" size={isLessThanSM ? "sm" : "md"}>
-          Pixel Airbuds
+          {name}
         </Heading>
         {!isLessThanSM && (
           <Text fontSize={"sm"} color="#707070">
-            4.5/5 <Icon as={HiStar}  />
+            <StarRating isReadOnly={true} val={rating} />
+            {/* 4.5/5 <Icon as={HiStar} /> */}
           </Text>
         )}
         <Text fontSize={isLessThanSM ? "xs" : "sm"} color="#707070">
-          Not Providing Delivery
+          {isDelivery ? "Providing Delivery" : "Not Providing Delivery"}
         </Text>
       </VStack>
       <Spacer />
       <Flex flexDir="column" justifyContent="space-between" h="100%">
         <Heading as="h5" size={isLessThanSM ? "sm" : "md"}>
-          $315
+          ${price}
         </Heading>
         <Box width={isLessThanSM ? "60px" : "71px"}>
           <NumberInput
             size={isLessThanSM ? "xs" : "sm"}
             defaultValue={1}
             min={1}
-            max={10}
+            max={qtyAvailable}
             focusBorderColor="teal"
             value={quantity}
             onChange={(val) => setQuantity(val)}

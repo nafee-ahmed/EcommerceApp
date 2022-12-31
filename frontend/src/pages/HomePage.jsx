@@ -75,7 +75,7 @@ function HomePage() {
                   <SkeletonText
                     mt="4"
                     noOfLines={4}
-                    spacing="4"
+                  spacing="4"
                     skeletonHeight="2"
                 />
                 </Box>

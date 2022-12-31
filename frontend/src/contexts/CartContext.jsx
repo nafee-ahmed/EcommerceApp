@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   error: null,
   loading: false,
   counter: 0,
+  total: 0
 };
 
 export const CartContext = createContext(INITIAL_STATE);
@@ -23,6 +24,7 @@ export const CartContextProvider = ({ children }) => {
       value={{
         cart: cartState.cart,
         error: cartState.error,
+        total: cartState.total,
         loading: cartState.loading,
         counter: cartState.counter,
         cartDispatch,

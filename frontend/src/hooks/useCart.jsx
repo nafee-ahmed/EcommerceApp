@@ -6,7 +6,7 @@ import { CartContext } from "../contexts/CartContext";
 import { ax } from "../utils/constants";
 
 const useCart = () => {
-  const { cartDispatch, cart, error, counter } = useContext(CartContext);
+  const { cartDispatch, cart, error, counter, total } = useContext(CartContext);
   const toast = useToast();
 
   const addToCart = async (categoryId, quantity) => {
@@ -44,6 +44,10 @@ const useCart = () => {
     });
     return result;
   };
+
+  useEffect(() => {
+    cartDispatch({ type: "UPDATE_TOTAL" });
+  }, [cart]);
 
   useEffect(() => {
     if (error)

@@ -200,13 +200,13 @@ function BuyCategoryPage() {
                       >
                         {isAdded ? "Update to Cart" : "Add to Cart"}
                       </Button>
-                      <IconButton
+                      {/* <IconButton
                         onClick={() => setIsLiked(!isLiked)}
                         disabled={isLiked}
                         icon={isLiked ? <BsSuitHeartFill /> : <BsSuitHeart />}
                         variant="ghost"
                         colorScheme="red"
-                      />
+                      /> */}
                     </Stack>
                   </GridItem>
                 </Grid>

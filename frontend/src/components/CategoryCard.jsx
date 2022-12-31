@@ -2,7 +2,6 @@ import {
   Box,
   Card,
   CardBody,
-  Divider,
   Heading,
   HStack,
   Image,
