@@ -8,7 +8,7 @@ import { CardElement } from "@stripe/react-stripe-js";
 import { Field, useField } from "formik";
 import React from "react";
 
-function CardInput({ ...props }) {
+function CardInput({ setIsCardValid, ...props }) {
   const [field, meta, form] = useField(props);
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
@@ -20,6 +20,7 @@ function CardInput({ ...props }) {
         onChange={(event) => {
           form.setValue(field.name, event.complete);
           form.setTouched(field.name, true, false);
+          setIsCardValid(event.complete);
         }}
       />
       <FormErrorMessage>{meta.error}</FormErrorMessage>

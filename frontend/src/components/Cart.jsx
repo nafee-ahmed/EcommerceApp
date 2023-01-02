@@ -8,6 +8,7 @@ import {
   Heading,
   SkeletonCircle,
   SkeletonText,
+  Spinner,
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
@@ -22,11 +23,31 @@ import ProductList from "./ProductList";
 import { useState } from "react";
 import Map from "./Map";
 import CardInput from "./CardInput";
+import { useEffect } from "react";
+import { ax } from "../utils/constants";
 
 function Cart({ products }) {
   //   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
   const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
   const { loading, cart, total } = useContext(CartContext);
+  const [clientSecret, setClientSecret] = useState("");
+  const [isCardValid, setIsCardValid] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const elements = useElements();
+  const stripe = useStripe();
+
+  useEffect(() => {
+    const getClientSecret = async () => {
+      try {
+        const res = await ax.post("/payment/initialize", { total });
+        setClientSecret(res.data?.clientSecret);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    };
+    total > 0 && getClientSecret();
+    console.log(clientSecret);
+  }, [total]);
 
   return (
     <Grid templateColumns="repeat(10, 1fr)">
@@ -75,8 +96,28 @@ function Cart({ products }) {
                 card: Yup.string().required("Card required"),
               })}
               onSubmit={async (values, actions) => {
-                console.log("cart", cart);
-                alert(JSON.stringify(values, null, 2));
+                setPaymentLoading(true);
+                try {
+                  await stripe
+                    .confirmCardPayment(clientSecret, {
+                      payment_method: {
+                        card: elements.getElement(CardElement),
+                      },
+                    })
+                    .then(async (result) => {
+                      values.card = "done";
+                      const res = await ax.post("/payment/create", {
+                        cart,
+                        values,
+                      });
+                      console.log(res.data);
+                      console.log("cart", cart);
+                      alert("done");
+                    });
+                } catch (error) {
+                  console.log(error.response?.data);
+                }
+                setPaymentLoading(false);
               }}
             >
               {(formik) => (
@@ -98,17 +139,18 @@ function Cart({ products }) {
                   </GridItem>
 
                   <GridItem colSpan={2}>
-                    <CardInput name="card" />
+                    <CardInput name="card" setIsCardValid={setIsCardValid} />
                   </GridItem>
 
                   <GridItem colSpan={2}>
                     <Button
+                      disabled={!isCardValid || paymentLoading}
                       width="100%"
                       colorScheme="green"
                       type="button"
                       onClick={formik.handleSubmit}
                     >
-                      Pay ${total}
+                      {paymentLoading ? <Spinner /> : `Pay ${total}`}
                     </Button>
                   </GridItem>
                 </Grid>
