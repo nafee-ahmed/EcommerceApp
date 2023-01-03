@@ -10,6 +10,7 @@ import {
   SkeletonText,
   Spinner,
   useMediaQuery,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { Field, Formik, yupToFormErrors } from "formik";
@@ -25,16 +26,19 @@ import Map from "./Map";
 import CardInput from "./CardInput";
 import { useEffect } from "react";
 import { ax } from "../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 function Cart({ products }) {
   //   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
   const [isLessThanMD] = useMediaQuery("(max-width: 48em)");
-  const { loading, cart, total } = useContext(CartContext);
+  const { loading, cart, total, cartDispatch } = useContext(CartContext);
   const [clientSecret, setClientSecret] = useState("");
   const [isCardValid, setIsCardValid] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const elements = useElements();
   const stripe = useStripe();
+  const toast = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getClientSecret = async () => {
@@ -105,17 +109,30 @@ function Cart({ products }) {
                       },
                     })
                     .then(async (result) => {
-                      values.card = "done";
+                      values.card = "paid";
                       const res = await ax.post("/payment/create", {
                         cart,
                         values,
                       });
                       console.log(res.data);
                       console.log("cart", cart);
-                      alert("done");
+
+                      cartDispatch({ type: "UPDATE_CART", payload: [] });
+
+                      toast({
+                        title: "Purchased 🥳!",
+                        status: "success",
+                        isClosable: true,
+                      });
+                      navigate("/");
                     });
                 } catch (error) {
                   console.log(error.response?.data);
+                  toast({
+                    title: error.response?.data?.message,
+                    status: "error",
+                    isClosable: true,
+                  });
                 }
                 setPaymentLoading(false);
               }}
@@ -144,13 +161,13 @@ function Cart({ products }) {
 
                   <GridItem colSpan={2}>
                     <Button
-                      disabled={!isCardValid || paymentLoading}
+                      disabled={!isCardValid || paymentLoading || total <= 0}
                       width="100%"
                       colorScheme="green"
                       type="button"
                       onClick={formik.handleSubmit}
                     >
-                      {paymentLoading ? <Spinner /> : `Pay ${total}`}
+                      {paymentLoading ? <Spinner /> : `Pay $${total}`}
                     </Button>
                   </GridItem>
                 </Grid>

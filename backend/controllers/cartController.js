@@ -52,6 +52,8 @@ module.exports.createCart = async (req, res, next) => {
     const category = await findCategoryById(req.body.category);
     if (category && req.body.quantity > category.quantity)
       return next(createError(404, "Exceeds quantity available by seller"));
+    if (req.user._id.toString() === category.owner.toString())
+      return next(createError(404, "Cannot buy item you added"));
 
     const foundCart = await Cart.findOne({ owner: req.user._id });
 
@@ -93,8 +95,12 @@ module.exports.getCartItems = async (req, res, next) => {
       path: "categories.category",
       model: "Category",
     });
-    res.status(200).json(cart.categories);
+    res.status(200).json(cart?.categories || []);
   } catch (error) {
     next(error);
   }
+};
+
+module.exports.emptyCart = async (ownerId) => {
+  await Cart.deleteMany({ owner: ownerId });
 };

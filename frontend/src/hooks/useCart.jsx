@@ -16,8 +16,7 @@ const useCart = () => {
       const res = await ax.post("/cart", { category: categoryId, quantity });
       cartDispatch({ type: "UPDATE_CART", payload: res.data?.categories });
     } catch (err) {
-      console.log(err);
-      cartDispatch({ type: "SET_ERROR", payload: err.response?.data });
+      cartDispatch({ type: "SET_ERROR", payload: err.response?.data?.message });
     }
     cartDispatch({ type: "STOP_LOADING" });
   };
@@ -36,7 +35,7 @@ const useCart = () => {
   };
 
   const verifyCategoryToCart = (categoryId) => {
-    let result = { isAdded: false, quantity: 0 };
+    let result = { isAdded: false, quantity: 1 };
     cart.some((item) => {
       if (item.category._id === categoryId) {
         result = { isAdded: true, quantity: item.quantity };
@@ -56,6 +55,7 @@ const useCart = () => {
         status: "error",
         isClosable: true,
       });
+    cartDispatch({ type: "SET_ERROR", payload: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 

@@ -7,6 +7,7 @@ import {
   Heading,
   Stack,
   StackDivider,
+  Text,
 } from "@chakra-ui/react";
 
 import ProductItem from "./ProductItem";
@@ -26,21 +27,27 @@ function ProductList({ label, width, products }) {
 
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4" w="100%">
-          {products?.map((product) => {
-            return (
-              <ProductItem
-                name={product.category.productName}
-                key={product.category._id}
-                price={product.category.price}
-                isDelivery={product.category.isDelivery}
-                qty={product.quantity}
-                rating={product.category.numberOfLikes}
-                qtyAvailable={product.category.quantity}
-                image={product.category.picture}
-                productId={product._id}
-              />
-            );
-          })}
+          {products?.length === 0 ? (
+            <Text fontSize="lg" textAlign={"center"} color="gray.500">
+              Nothing to display
+            </Text>
+          ) : (
+            products?.map((product) => {
+              return (
+                <ProductItem
+                  name={product.category.productName}
+                  key={product.category._id}
+                  price={product.category.price}
+                  isDelivery={product.category.isDelivery}
+                  qty={product.quantity}
+                  rating={product.category.numberOfLikes}
+                  qtyAvailable={product.category.quantity}
+                  image={product.category.picture}
+                  productId={product._id}
+                />
+              );
+            })
+          )}
         </Stack>
       </CardBody>
     </Card>
