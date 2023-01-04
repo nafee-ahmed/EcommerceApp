@@ -161,7 +161,7 @@ function BuyCategoryPage() {
                           </Text>
                           <PrivateComponent
                             authComp={
-                              <StarRating size={isLessThanSM ? "md" : "lg"} />
+                              <StarRating size={isLessThanSM ? "md" : "lg"} val={data?.numberOfLikes} />
                             }
                           />
                         </HStack>

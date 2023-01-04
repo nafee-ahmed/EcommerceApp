@@ -75,14 +75,18 @@ function HomePage() {
                   <SkeletonText
                     mt="4"
                     noOfLines={4}
-                  spacing="4"
+                    spacing="4"
                     skeletonHeight="2"
-                />
+                  />
                 </Box>
               ))
             : data?.map((category) => (
-                <Link to={`/buy/${category.type}/${category?._id}`} key={category._id}>
+                <Link
+                  to={`/buy/${category.type}/${category?._id}`}
+                  key={category._id}
+                >
                   <CategoryCard
+                    productId={category?._id}
                     image={category?.picture}
                     tags={
                       currentTab === undefined
@@ -91,6 +95,7 @@ function HomePage() {
                     }
                     price={category.price}
                     name={category.productName}
+                    rating={category.numberOfLikes}
                   />
                 </Link>
               ))}

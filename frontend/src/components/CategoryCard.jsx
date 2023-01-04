@@ -12,8 +12,9 @@ import {
 import React from "react";
 import { useState } from "react";
 import productSample from "../assets/product-sample.png";
+import StarRating from "./StarRating";
 
-function CategoryCard({ image, tags, price, name }) {
+function CategoryCard({ image, tags, price, name, rating, productId }) {
   const [isHovering, setIsHovering] = useState(false);
   return (
     <Card
@@ -46,9 +47,14 @@ function CategoryCard({ image, tags, price, name }) {
                 ))}
             </Text>
             <Heading size="md">{name}</Heading>
-            <Text fontSize="xs" fontWeight="bold">
+            <StarRating
+              isReadOnly={true}
+              val={rating}
+              id={productId}
+            />
+            {/* <Text fontSize="xs" fontWeight="bold">
               4.5/5 Rating
-            </Text>
+            </Text> */}
           </VStack>
           <Heading size="md" color="#FF5D15">
             ${price}
