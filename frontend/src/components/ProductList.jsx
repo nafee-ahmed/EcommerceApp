@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import useCart from "../hooks/useCart";
 
-function ProductList({ label, width, products }) {
+function ProductList({ label, width, products = [] }) {
   return (
     <Card variant="unstyled" width={width || "100%"}>
       <CardHeader>
@@ -35,15 +35,19 @@ function ProductList({ label, width, products }) {
             products?.map((product) => {
               return (
                 <ProductItem
+                  isStarDisabled={label === "bought" ? false : true}
+                  isNumInputDisabled={label === "bought" ? true : false}
                   name={product.category.productName}
-                  key={product.category._id}
+                  key={label === "bought" ? product._id : product.category._id}
                   price={product.category.price}
                   isDelivery={product.category.isDelivery}
                   qty={product.quantity}
                   rating={product.category.numberOfLikes}
                   qtyAvailable={product.category.quantity}
                   image={product.category.picture}
-                  productId={product._id}
+                  productId={
+                    label === "bought" ? product.category._id : product._id
+                  }
                 />
               );
             })

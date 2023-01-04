@@ -56,3 +56,14 @@ module.exports.createPayment = async (req, res, next) => {
     next(error);
   }
 };
+
+module.exports.getPayments = async (req, res, next) => {
+  try {
+    const payments = await Payment.find({ buyer: req.user._id }).populate(
+      "category"
+    );
+    res.status(200).json(payments);
+  } catch (error) {
+    next(error);
+  }
+};

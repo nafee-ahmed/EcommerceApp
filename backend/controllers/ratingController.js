@@ -1,13 +1,15 @@
+const Category = require("../models/Category");
 const Rating = require("../models/Rating");
 
 module.exports.getUserRating = async (req, res, next) => {
-    let rating;
-    console.log(req.user._id, req.query.categoryId)
+  let rating;
   try {
     const ratingFound = await Rating.findOne({
-      $and: [{ owner: req.user._id.toString() }, { category: req.query.categoryId }],
+      $and: [
+        { owner: req.user._id.toString() },
+        { category: req.query.categoryId },
+      ],
     });
-    console.log(ratingFound);
     if (!ratingFound) rating = 0;
     else rating = ratingFound.rating;
 
@@ -17,9 +19,19 @@ module.exports.getUserRating = async (req, res, next) => {
   }
 };
 
+const addRatingToCategory = async (categoryId, rating) => {
+  const category = await Category.findById(categoryId);
+  const newRating = (category.numberOfLikes + rating) / 2;
+  await Category.findByIdAndUpdate(categoryId);
+  await Category.findByIdAndUpdate(
+    categoryId,
+    { numberOfLikes: newRating },
+    { new: true }
+  );
+};
+
 module.exports.createUserRating = async (req, res, next) => {
   const { rating, categoryId } = req.body;
-  console.log(req.body);
 
   try {
     const ratingFound = await Rating.findOne({
@@ -41,6 +53,8 @@ module.exports.createUserRating = async (req, res, next) => {
       });
       await newRating.save();
     }
+
+    await addRatingToCategory(categoryId, rating);
 
     res.status(200).json({ ...newRating._doc });
   } catch (error) {

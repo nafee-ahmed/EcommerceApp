@@ -33,6 +33,8 @@ function ProductItem({
   qtyAvailable = "XXX",
   image = productImg,
   productId,
+  isNumInputDisabled = false,
+  isStarDisabled = true,
 }) {
   const toast = useToast();
   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
@@ -72,7 +74,11 @@ function ProductItem({
         </Heading>
         {!isLessThanSM && (
           <Text fontSize={"sm"} color="#707070">
-            <StarRating isReadOnly={true} val={rating} />
+            <StarRating
+              isReadOnly={isStarDisabled}
+              val={rating}
+              id={productId}
+            />
             {/* 4.5/5 <Icon as={HiStar} /> */}
           </Text>
         )}
@@ -95,6 +101,7 @@ function ProductItem({
             value={quantity}
             onChange={(val) => setQuantity(val)}
             onInvalid={quantityErrorHandler}
+            disabled={isNumInputDisabled}
           >
             <NumberInputField />
             <NumberInputStepper>
