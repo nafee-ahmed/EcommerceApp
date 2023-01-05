@@ -16,6 +16,7 @@ import useFetch from "./hooks/useFetch";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { STRIPE_PUBLISHABLE_KEY } from "./utils/constants";
+import OrderPage from "./pages/OrderPage";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -71,6 +72,14 @@ function App() {
             }
           />
           <Route path="/" element={<HomePage />} />
+          <Route
+            path="/orders"
+            element={
+              <PrivateRoute>
+                <OrderPage />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </ChakraProvider>
     </div>

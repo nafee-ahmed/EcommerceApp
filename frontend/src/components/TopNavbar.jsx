@@ -162,7 +162,7 @@ function TopNavbar() {
                   </Box>
 
                   <CustomNavLink
-                    route="/"
+                    route="/orders"
                     ariaText="Orders"
                     icon={<GoListUnordered size="70%" />}
                   />
@@ -200,7 +200,7 @@ function TopNavbar() {
               />
               <CustomNavLink
                 label="small"
-                route="/"
+                route="/orders"
                 ariaText="Orders"
                 icon={<GoListUnordered size="70%" />}
                 text="My Orders"
