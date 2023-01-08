@@ -9,7 +9,6 @@ import {
   GridItem,
   Heading,
   HStack,
-  IconButton,
   Image,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -25,25 +24,18 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
-import PageWrapper from "../components/PageWrapper";
-import CategoryOptions from "../components/CategoryOptions";
-import TagList from "../components/TagList";
-import productSample from "../assets/product-sample.png";
-import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
-import { useState } from "react";
-import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
-import useFetch from "../hooks/useFetch";
-import StarRating from "../components/StarRating";
-import { ax } from "../utils/constants";
-import PrivateComponent from "../components/PrivateComponent";
-import useCart from "../hooks/useCart";
-import { CartContext } from "../contexts/CartContext";
-import Rating from "react-rating";
+import React, { useContext, useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
+import Rating from "react-rating";
+import { useNavigate, useParams } from "react-router-dom";
+import productSample from "../assets/product-sample.png";
+import CategoryOptions from "../components/CategoryOptions";
+import PageWrapper from "../components/PageWrapper";
+import PrivateComponent from "../components/PrivateComponent";
+import { AuthContext } from "../contexts/AuthContext";
+import { CartContext } from "../contexts/CartContext";
+import useCart from "../hooks/useCart";
+import useFetch from "../hooks/useFetch";
 
 function BuyCategoryPage() {
   const toast = useToast();

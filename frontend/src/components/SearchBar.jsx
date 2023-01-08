@@ -1,12 +1,10 @@
 import {
-  Box,
   Heading,
   HStack,
   IconButton,
   Image,
   Input,
   InputGroup,
-  InputLeftElement,
   InputRightElement,
   Popover,
   PopoverContent,
@@ -18,28 +16,38 @@ import {
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import React, { useEffect, useRef, useState } from "react";
+import { FaSearch, FaStar } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import Rating from "react-rating";
-import productImg from "../assets/product-sample.png";
-import { FaStar } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { ax } from "../utils/constants";
 
 function SearchBar({ setIsShowSearch, withCancelButton, label = "small" }) {
   const [isLessThanSM] = useMediaQuery("(max-width: 30em)");
   const [isOpen, setIsOpen] = useState(false);
-  const [searchRes, setSearchRes] = useState(["String", "as", "asbbs"]);
+  const [searchRes, setSearchRes] = useState([]);
   const isSearchActive = useRef(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  //delete this
-  const [tags, setTags] = useState(["A", "vvv"]);
 
   const handleTextChange = (text) => {
     isSearchActive.current = true;
     setIsOpen(searchRes.length > 0 && isSearchActive.current);
     setSearchQuery(text);
   };
+
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      try {
+        const res = await ax.get("/category/search/?search=" + searchQuery);
+        setSearchRes(res.data);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    };
+    fetchSearchResults();
+    console.log(searchRes);
+  }, [searchQuery]);
 
   return (
     <Popover isOpen={isOpen} autoFocus={false} w="100%">
@@ -91,49 +99,55 @@ function SearchBar({ setIsShowSearch, withCancelButton, label = "small" }) {
         <VStack
           divider={<StackDivider borderColor="gray.200" />}
           align="stretch"
+          maxH={"50vh"}
+          overflowY={"auto"}
         >
           {searchRes?.map((item) => (
-            <HStack key={item} m={2} align="start">
-              {!isLessThanSM && (
-                <Image
-                  boxSize={"60px"}
-                  src={productImg}
-                  borderRadius="2xl"
-                  objectFit={"cover"}
+            <Link to={`/buy/${item.type}/${item._id}`}>
+              <HStack
+                _hover={{ bg: "gray.100", cursor: "pointer" }}
+                key={item._id}
+                p={2}
+                align="start"
+              >
+                {!isLessThanSM && (
+                  <Image
+                    boxSize={"60px"}
+                    src={item?.picture}
+                    borderRadius="2xl"
+                    objectFit={"cover"}
+                  />
+                )}
+                <VStack alignItems={"start"}>
+                  <Heading as="h5" size={isLessThanSM ? "sm" : "md"}>
+                    {item.productName}
+                  </Heading>
+                  <Text fontSize="xs" color="#773903">
+                    {item?.tags?.map((tag) => (
+                      <Tag
+                        key={tag}
+                        size="sm"
+                        variant="solid"
+                        colorScheme="teal"
+                        mr={2}
+                      >
+                        {tag}
+                      </Tag>
+                    ))}
+                  </Text>
+                </VStack>
+                <Spacer />
+                <Rating
+                  initialRating={item?.numberOfLikes}
+                  readonly={true}
+                  emptySymbol={<FaStar color="#bbb" />}
+                  fullSymbol={<FaStar color="#ffc107" />}
+                  emptyColor="#bbb"
+                  fullColor="#ffc107"
                 />
-              )}
-              <VStack alignItems={"start"}>
-                <Heading as="h5" size={isLessThanSM ? "sm" : "md"}>
-                  Apple Airpods
-                </Heading>
-                <Text fontSize="xs" color="#773903">
-                  {tags?.map((tag) => (
-                    <Tag
-                      key={tag}
-                      size="sm"
-                      variant="solid"
-                      colorScheme="teal"
-                      mr={2}
-                    >
-                      {tag}
-                    </Tag>
-                  ))}
-                </Text>
-              </VStack>
-              <Spacer />
-              <Rating
-                initialRating={4}
-                readonly={true}
-                emptySymbol={<FaStar color="#bbb" />}
-                fullSymbol={<FaStar color="#ffc107" />}
-                emptyColor="#bbb"
-                fullColor="#ffc107"
-              />
-            </HStack>
-            // <Box px={3} key={item}>
-            //   <Text cursor={"pointer"}>label</Text>
-            // </Box>
-          ))}{" "}
+              </HStack>
+            </Link>
+          ))}
         </VStack>
       </PopoverContent>
     </Popover>
