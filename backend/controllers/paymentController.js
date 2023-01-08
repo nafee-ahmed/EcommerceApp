@@ -30,7 +30,7 @@ const registerPayment = async (
     seller,
     category,
     quantity,
-    status: "paid",
+    status: "Paid",
     description,
     latitude: latLong[0].toString(),
     longitude: latLong[1].toString(),
@@ -63,6 +63,17 @@ module.exports.getPayments = async (req, res, next) => {
       "category"
     );
     res.status(200).json(payments);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.getOrders = async (req, res, next) => {
+  try {
+    const orders = await Payment.find({ seller: req.user._id }).populate(
+      "category"
+    );
+    res.status(200).json(orders);
   } catch (error) {
     next(error);
   }

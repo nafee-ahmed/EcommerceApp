@@ -25,7 +25,6 @@ function Map({ ...props }) {
     lat !== undefined &&
       long !== undefined &&
       form.setValue(lat?.toString() + "," + long?.toString());
-    console.log(lat, long);
   }, [lat, long]);
   const toast = useToast();
 
