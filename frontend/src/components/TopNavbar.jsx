@@ -88,7 +88,11 @@ function TopNavbar() {
 
       {!isLessThanSM && (
         <Box w="30%">
-          <SearchBar setIsShowSearch={true} withCancelButton={false} />
+          <SearchBar
+            setIsShowSearch={true}
+            withCancelButton={false}
+            label="big"
+          />
         </Box>
       )}
 
@@ -149,7 +153,7 @@ function TopNavbar() {
                   <Box pos={"relative"}>
                     <Box pos={"absolute"} top="-2" zIndex={1}>
                       <Badge borderRadius="full" px="2" colorScheme="red">
-                      {counter}
+                        {counter}
                       </Badge>
                     </Box>
 

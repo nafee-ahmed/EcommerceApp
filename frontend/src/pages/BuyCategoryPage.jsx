@@ -42,6 +42,8 @@ import { ax } from "../utils/constants";
 import PrivateComponent from "../components/PrivateComponent";
 import useCart from "../hooks/useCart";
 import { CartContext } from "../contexts/CartContext";
+import Rating from "react-rating";
+import { FaStar } from "react-icons/fa";
 
 function BuyCategoryPage() {
   const toast = useToast();
@@ -83,7 +85,6 @@ function BuyCategoryPage() {
     setIsAdded(isAddedInfo.isAdded);
     setQuantity(isAddedInfo.quantity);
   }, [cart]);
-
 
   return (
     <PageWrapper>
@@ -161,7 +162,14 @@ function BuyCategoryPage() {
                           </Text>
                           <PrivateComponent
                             authComp={
-                              <StarRating size={isLessThanSM ? "md" : "lg"} val={data?.numberOfLikes} />
+                              // <StarRating size={isLessThanSM ? "md" : "lg"} val={data?.numberOfLikes} />
+                              <Rating
+                                initialRating={data?.numberOfLikes}
+                                emptySymbol={<FaStar color="#bbb" />}
+                                fullSymbol={<FaStar color="#ffc107" />}
+                                emptyColor="#bbb"
+                                fullColor="#ffc107"
+                              />
                             }
                           />
                         </HStack>
