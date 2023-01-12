@@ -82,12 +82,9 @@ module.exports.getCategory = async (req, res, next) => {
 module.exports.searchCategories = async (req, res, next) => {
   const query = req.query.search;
   try {
-    let results = [];
-    results = await Category.find({ productName: { $regex: query } });
-
-    if (results.length === 0) {
-      results = await Category.find({ tags: { $in: [query] } });
-    }
+    let results = await Category.find({
+      $or: [{ productName: { $regex: query } }, { tags: { $in: query } }],
+    });
 
     res.status(200).json(results);
   } catch (error) {
