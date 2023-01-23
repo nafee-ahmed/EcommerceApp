@@ -40,7 +40,7 @@ module.exports.getCategories = async (req, res, next) => {
   const categoryType = req.params.categoryType.toLowerCase();
   const tags = req.query.tags?.split(",");
   let categories = [];
-
+  
   try {
     if (!tags) {
       // if there are no req.query of tags

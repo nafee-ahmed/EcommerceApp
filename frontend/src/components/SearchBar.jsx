@@ -34,12 +34,6 @@ function SearchBar({ setIsShowSearch, withCancelButton, label = "small" }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleTextChange = (text) => {
-    setSearchQuery(text);
-    isSearchActive.current = true;
-    setIsOpen(searchRes.length > 0 && isSearchActive.current);
-  };
-
   useEffect(() => {
     setLoading(true);
     const fetchSearchResults = async () => {
@@ -52,8 +46,14 @@ function SearchBar({ setIsShowSearch, withCancelButton, label = "small" }) {
     };
     fetchSearchResults();
     setLoading(false);
-    console.log(searchRes);
+    console.log("res", searchRes);
   }, [searchQuery]);
+
+  const handleTextChange = (text) => {
+    setSearchQuery(text);
+    isSearchActive.current = true;
+    setIsOpen(searchRes.length > 0 && isSearchActive.current);
+  };
 
   return (
     <Popover isOpen={isOpen} autoFocus={false} w="100%">
