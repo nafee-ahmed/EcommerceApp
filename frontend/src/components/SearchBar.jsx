@@ -46,7 +46,6 @@ function SearchBar({ setIsShowSearch, withCancelButton, label = "small" }) {
     };
     fetchSearchResults();
     setLoading(false);
-    console.log("res", searchRes);
   }, [searchQuery]);
 
   const handleTextChange = (text) => {

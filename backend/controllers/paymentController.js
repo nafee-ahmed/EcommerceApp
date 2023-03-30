@@ -78,3 +78,12 @@ module.exports.getOrders = async (req, res, next) => {
     next(error);
   }
 };
+
+module.exports.getStripePublishabelKey = (req, res, next) => {
+  try {
+    const key = process.env.STRIPE_PUBLISHABLE_KEY;
+    res.status(200).json(key);
+  } catch (error) {
+    next(error);
+  }
+};

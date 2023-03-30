@@ -12,10 +12,9 @@ import { CartContext } from "./contexts/CartContext";
 import { AuthContext } from "./contexts/AuthContext";
 import useCart from "./hooks/useCart";
 import PrivateRoute from "./components/PrivateRoute";
-import useFetch from "./hooks/useFetch";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import { STRIPE_PUBLISHABLE_KEY } from "./utils/constants";
+import { ax } from "./utils/constants";
 import OrderPage from "./pages/OrderPage";
 
 function App() {
@@ -23,9 +22,16 @@ function App() {
   const { cartDispatch, cart } = useContext(CartContext);
 
   const { refreshCartList } = useCart();
-  const [stripePromise, setStripePromise] = useState(() =>
-    loadStripe(STRIPE_PUBLISHABLE_KEY)
-  );
+  const [stripePromise, setStripePromise] = useState();
+
+  useEffect(() => {
+    const loadStripeAsync = async () => {
+      const res = await ax.get("/payment/stripe_publishable_key");
+      const pub_key = loadStripe(res.data);
+      setStripePromise(pub_key);
+    };
+    loadStripeAsync();
+  }, []);
 
   useEffect(() => {
     if (user) {

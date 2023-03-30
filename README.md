@@ -2,7 +2,7 @@
 
 - Install docker
 
-- Make a new file named `config.env` on the directory `{project root directory}/backend/`, and set it up following example.config.env. You need to setup the required environment variables. 
+- Make a new file named `config.env` on the directory `{project root directory}/backend/`, and copy the contents from `example.config.env` onto it, and fill in the blanks of the copied contents. You need to setup the required environment variables. 
 
 - Go to the root project directory and run `docker-compose up`
 
