@@ -58,8 +58,8 @@ function AddCategoryPage() {
             .required("Price required"),
           tags: Yup.array()
             .of(Yup.string())
-            .min(2, "Enter at least 2 tags")
-            .max(3, "Enter maximum 3 tags")
+            .min(2, "Enter at least 2 communities")
+            .max(3, "Enter maximum 3 communities")
             .required("Tags required"),
           condition: Yup.string().required("Condition required"),
           quantity: Yup.number()

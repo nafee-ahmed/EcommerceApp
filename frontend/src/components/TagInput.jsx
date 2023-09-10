@@ -47,7 +47,7 @@ function TagInput({ label, focusBorderColor, ...props }) {
             <Input
               focusBorderColor={focusBorderColor}
               type="text"
-              placeholder="Press Space to add tag"
+              placeholder="Press Space to add community"
               onKeyUp={(event) => {
                 if (
                   (event.key === " " ||
@@ -59,7 +59,7 @@ function TagInput({ label, focusBorderColor, ...props }) {
                 ) {
                   if (form.values.tags.length >= 3) {
                     toast({
-                      title: "Maximum 3 tags only",
+                      title: "Maximum 3 communities only",
                       status: "error",
                       isClosable: true,
                     });
